@@ -33,6 +33,7 @@ Live demo: https://gatetrace-daytona.vercel.app
 | 실행 시간 | 실측됨 | 로컬과 Vercel의 반복 라이브 실행은 약 20.8~41.1초였습니다. 해커톤 데모의 네트워크·모델 상태에 따라 달라질 수 있습니다. |
 | 공개 저장소 | 확인됨 | https://github.com/geondongkim/gatetrace-daytona |
 | 외부 데모 URL | 확인됨 | https://gatetrace-daytona.vercel.app 의 `/`, `/api/health`, 실제 정상 샘플 E2E를 확인했습니다. |
+| 모바일 반응형 | 확인됨 | 배포 URL의 320×812에서 가로 오버플로우 없음, 모바일 내비게이션 열림, 한영 시작 화면 렌더링을 확인했습니다. 모바일 세로 스크롤은 허용합니다. |
 
 ## 목표 아키텍처
 

@@ -13,6 +13,7 @@
 - [x] `QUARANTINED` 판정, 구조화 근거, 결정론적 한영 fallback 설명이 함께 보이는 결과
 - [x] 공개 저장소: https://github.com/geondongkim/gatetrace-daytona
 - [x] Vercel 프로덕션 배포 https://gatetrace-daytona.vercel.app 의 루트·헬스·정상 샘플 E2E 확인
+- [x] 배포 URL 320×812에서 가로 오버플로우 없음, 모바일 메뉴 동작 확인
 - [ ] 캡처와 로그에 API 키, 토큰, 이메일, 내부 URL, 원본 민감 데이터가 없는지 확인
 
 ## 라이브 데모 순서
