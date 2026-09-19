@@ -1,0 +1,15 @@
+.env
+.env.*
+.git
+.github
+.playwright-cli
+.pytest_cache
+.venv
+**/__pycache__
+**/*.pyc
+create_a_sandbox.py
+tmp
+output
+presentation
+research
+tests

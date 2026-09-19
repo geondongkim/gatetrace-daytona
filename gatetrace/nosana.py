@@ -92,10 +92,14 @@ class NosanaClient:
     def __init__(
         self,
         api_key: str | None = None,
+        base_url: str | None = None,
         preferred_model: str | None = None,
         http_client: httpx.Client | None = None,
     ) -> None:
         self._api_key = api_key if api_key is not None else os.getenv("NOSANA_API_KEY")
+        self._base_url = base_url if base_url is not None else os.getenv(
+            "NOSANA_BASE_URL", NOSANA_BASE_URL
+        )
         self._preferred_model = (
             preferred_model if preferred_model is not None else os.getenv("NOSANA_MODEL")
         )
@@ -118,7 +122,10 @@ class NosanaClient:
                     model_id,
                     system=(
                         "You design data-quality gates. Return only JSON matching the supplied "
-                        "schema. Never return code. Use only listed dataset columns."
+                        "schema. Never return code. Return exactly one required_columns, "
+                        "max_missing_rate, time_order, and forbidden_columns gate. Use only "
+                        "listed dataset columns except that forbidden_columns must include "
+                        "future_failure_label."
                     ),
                     user=json.dumps(
                         {"research_goal": research_goal, "dataset_profile": profile},
@@ -194,9 +201,9 @@ class NosanaClient:
         if self._client is not None:
             return _BorrowedClient(self._client)
         return httpx.Client(
-            base_url=NOSANA_BASE_URL,
+            base_url=self._base_url,
             headers={"Authorization": f"Bearer {self._api_key}"},
-            timeout=httpx.Timeout(20.0),
+            timeout=httpx.Timeout(45.0),
         )
 
     def _discover_model(self, client: httpx.Client) -> str | None:
@@ -212,7 +219,8 @@ class NosanaClient:
             return None
         if self._preferred_model:
             return self._preferred_model if self._preferred_model in model_ids else None
-        return model_ids[0]
+        chat_models = [model_id for model_id in model_ids if "embed" not in model_id.lower()]
+        return (chat_models or model_ids)[0]
 
     def _chat_json(
         self,
@@ -224,26 +232,34 @@ class NosanaClient:
         schema: dict[str, Any],
         schema_name: str,
     ) -> dict[str, Any]:
+        schema_instruction = json.dumps(schema, ensure_ascii=False, separators=(",", ":"))
         response = client.post(
             "/chat/completions",
             json={
                 "model": model_id,
                 "temperature": 0,
                 "messages": [
-                    {"role": "system", "content": system},
+                    {
+                        "role": "system",
+                        "content": (
+                            f"{system} The response must validate against this JSON Schema: "
+                            f"{schema_instruction}"
+                        ),
+                    },
                     {"role": "user", "content": user},
                 ],
-                "response_format": {
-                    "type": "json_schema",
-                    "json_schema": {"name": schema_name, "strict": True, "schema": schema},
-                },
             },
         )
         response.raise_for_status()
         content = response.json()["choices"][0]["message"]["content"]
         if not isinstance(content, str):
             raise ValueError("Nosana response content was not JSON text")
-        parsed = json.loads(content)
+        cleaned = content.strip()
+        if cleaned.startswith("```json") and cleaned.endswith("```"):
+            cleaned = cleaned[7:-3].strip()
+        elif cleaned.startswith("```") and cleaned.endswith("```"):
+            cleaned = cleaned[3:-3].strip()
+        parsed = json.loads(cleaned)
         if not isinstance(parsed, dict):
             raise ValueError("Nosana response must be a JSON object")
         return parsed

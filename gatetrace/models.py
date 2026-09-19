@@ -57,13 +57,21 @@ GateSpec = Annotated[
 
 
 class GatePlan(StrictModel):
-    gates: list[GateSpec] = Field(min_length=1, max_length=4)
+    gates: list[GateSpec] = Field(min_length=4, max_length=4)
 
     @model_validator(mode="after")
     def unique_gate_types(self) -> "GatePlan":
         types = [gate.type for gate in self.gates]
         if len(types) != len(set(types)):
             raise ValueError("gate types must be unique")
+        required_types = {
+            "required_columns",
+            "max_missing_rate",
+            "time_order",
+            "forbidden_columns",
+        }
+        if set(types) != required_types:
+            raise ValueError("gate plan must contain every supported gate type exactly once")
         return self
 
 

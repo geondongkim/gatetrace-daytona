@@ -111,10 +111,73 @@ def test_static_page_exposes_three_language_modes_and_four_steps() -> None:
     assert page.count('class="language-button"') == 3
     assert all(f'data-language="{mode}"' in page for mode in ("ko", "en", "both"))
     assert page.count("<li data-step=") == 4
-    assert 'id="nosana-model"' in page
-    assert 'id="sandbox-id"' in page
-    assert 'id="exit-code"' in page
-    assert 'id="duration"' in page
+    for section_id in ("welcome", "goal-dataset", "gate-spec", "isolated-run", "verdict"):
+        assert f'id="{section_id}"' in page
+    for contract_id in (
+        "run-form",
+        "run-button",
+        "timeline",
+        "gate-grid",
+        "nosana-model",
+        "sandbox-id",
+        "exit-code",
+        "duration",
+    ):
+        assert f'id="{contract_id}"' in page
+
+
+def test_static_assets_use_root_paths_and_light_design_tokens() -> None:
+    page = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    styles = (STATIC_DIR / "styles.css").read_text(encoding="utf-8")
+
+    assert 'href="/styles.css"' in page
+    assert 'src="/app.js"' in page
+    assert '<meta name="color-scheme" content="light"' in page
+    assert '<meta name="theme-color" content="#F4F7FB"' in page
+    assert "--surface-canvas: #F4F7FB" in styles
+    assert "--surface-card: #FFFFFF" in styles
+    assert "--action-primary: #2563EB" in styles
+    assert "grid-template-columns: 240px minmax(0, 1fr)" in styles
+    assert "@media (prefers-reduced-motion: reduce)" in styles
+
+
+def test_demo_fixtures_are_explicitly_labeled_in_the_ui() -> None:
+    page = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    script = (STATIC_DIR / "app.js").read_text(encoding="utf-8")
+
+    assert page.count('data-i18n="demoBadge"') == 2
+    assert 'demoDataLabel: { ko: "MVP 데모 · 센서 CSV 예시"' in script
+
+
+def test_product_copy_covers_research_data_and_assigns_platform_roles() -> None:
+    script = (STATIC_DIR / "app.js").read_text(encoding="utf-8")
+
+    assert 'heroTitle: { ko: "연구에 쓰기 전에, 데이터를 증명합니다."' in script
+    assert "논문·연구에 사용할 데이터" in script
+    assert "data for research and paper development" in script
+    assert "This MVP demonstrates the workflow with sensor CSV files." in script
+    assert "Nosana constrained specification" in script
+    assert "Daytona verdict" in script
+    for misleading_copy in (
+        "Nosana 모델의 판단",
+        "Nosana model decision",
+        "Nosana 판단과 실행 정보",
+        "Nosana decision and runtime evidence",
+    ):
+        assert misleading_copy not in script
+
+
+def test_desktop_spa_shows_one_workflow_panel_without_document_scroll() -> None:
+    page = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    styles = (STATIC_DIR / "styles.css").read_text(encoding="utf-8")
+    script = (STATIC_DIR / "app.js").read_text(encoding="utf-8")
+
+    assert '<body data-active-stage="welcome">' in page
+    assert ".main-content > section { display: none; }" in styles
+    assert 'body[data-active-stage="verdict"] #verdict { display: block; }' in styles
+    assert "grid-template-rows: 64px minmax(0, 1fr) 44px" in styles
+    assert "height: 100vh" in styles
+    assert "document.body.dataset.activeStage = stage" in script
 
 
 def test_root_mount_serves_page_and_assets_without_404() -> None:
@@ -126,3 +189,11 @@ def test_root_mount_serves_page_and_assets_without_404() -> None:
     assert client.get("/").status_code == 200
     assert client.get("/styles.css").status_code == 200
     assert client.get("/app.js").status_code == 200
+
+
+def test_frontend_uses_backend_forbidden_columns_gate_id() -> None:
+    script = (Path(__file__).resolve().parents[1] / "static" / "app.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert '{ id: "forbidden_columns", labelKey: "gateLeakageColumns" }' in script

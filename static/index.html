@@ -3,203 +3,246 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#08110f" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#F4F7FB" />
     <title>GateTrace</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563EB'/%3E%3Cpath d='M22 11.5a8 8 0 1 0 0 9V16h-6' fill='none' stroke='white' stroke-width='3'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="/styles.css" />
     <script src="/app.js" defer></script>
   </head>
-  <body>
-    <div class="noise" aria-hidden="true"></div>
-    <header class="site-header">
-      <a class="brand" href="#top" aria-label="GateTrace">
-        <span class="brand-mark" aria-hidden="true">
-          <span></span><span></span><span></span>
-        </span>
-        <span>GateTrace</span>
-      </a>
+  <body data-active-stage="welcome">
+    <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
 
-      <div class="header-actions">
-        <div class="system-pill">
-          <span class="status-dot" aria-hidden="true"></span>
-          <span data-i18n="systemReady"></span>
-        </div>
-        <div class="language-switcher" role="group" data-i18n-aria="languageSelector">
-          <button class="language-button" type="button" data-language="ko"></button>
-          <button class="language-button" type="button" data-language="en"></button>
-          <button class="language-button" type="button" data-language="both"></button>
-        </div>
-      </div>
-    </header>
+    <div class="app-shell">
+      <aside id="workflow-rail" class="workflow-rail" aria-label="검증 워크플로">
+        <a class="brand" href="#welcome" aria-label="GateTrace 홈">
+          <span class="brand-mark" aria-hidden="true">G</span>
+          <span><strong>GateTrace</strong><small data-i18n="productDescriptor"></small></span>
+        </a>
 
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="eyebrow"><span>01</span><span data-i18n="eyebrow"></span></div>
-        <h1 id="hero-title" data-i18n="heroTitle"></h1>
-        <p class="hero-copy" data-i18n="heroCopy"></p>
-        <div class="trust-row" aria-label="Technology">
-          <span>Daytona</span><i></i><span>Nosana</span><i></i><span>4 Gate Protocol</span>
+        <div class="rail-heading">
+          <span data-i18n="workflowLabel"></span>
+          <strong data-i18n="workflowTitle"></strong>
         </div>
-      </section>
+        <nav class="workflow-nav" aria-label="워크플로 단계">
+          <a href="#welcome" data-workflow-stage="welcome" aria-current="step">
+            <span>1</span><span><strong data-i18n="navWelcome"></strong><small data-i18n="navWelcomeHint"></small></span>
+          </a>
+          <a href="#goal-dataset" data-workflow-stage="goal">
+            <span>2</span><span><strong data-i18n="navGoal"></strong><small data-i18n="navGoalHint"></small></span>
+          </a>
+          <a href="#gate-spec" data-workflow-stage="gates">
+            <span>3</span><span><strong data-i18n="navGates"></strong><small data-i18n="navGatesHint"></small></span>
+          </a>
+          <a href="#isolated-run" data-workflow-stage="run">
+            <span>4</span><span><strong data-i18n="navRun"></strong><small data-i18n="navRunHint"></small></span>
+          </a>
+          <a href="#verdict" data-workflow-stage="verdict">
+            <span>5</span><span><strong data-i18n="navVerdict"></strong><small data-i18n="navVerdictHint"></small></span>
+          </a>
+        </nav>
 
-      <section class="workspace" aria-labelledby="workspace-title">
-        <div class="workspace-heading">
-          <div>
-            <p class="section-index">02 / RUN</p>
-            <h2 id="workspace-title" data-i18n="workspaceTitle"></h2>
+        <div class="rail-note">
+          <span class="status-icon" aria-hidden="true">●</span>
+          <div><strong data-i18n="systemReady"></strong><small data-i18n="systemReadyHint"></small></div>
+        </div>
+      </aside>
+
+      <div class="page-column">
+        <header class="site-header">
+          <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="workflow-rail" aria-expanded="false" data-i18n-aria="openNavigation">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+          </button>
+          <a class="mobile-brand" href="#welcome" aria-label="GateTrace 홈">GateTrace</a>
+          <div class="current-step" aria-live="polite">
+            <span data-i18n="currentStageLabel"></span>
+            <strong id="current-stage" data-i18n="navWelcome"></strong>
           </div>
-          <p data-i18n="workspaceHint"></p>
-        </div>
+          <div class="language-switcher" role="group" data-i18n-aria="languageSelector">
+            <button class="language-button" type="button" data-language="ko"></button>
+            <button class="language-button" type="button" data-language="en"></button>
+            <button class="language-button" type="button" data-language="both"></button>
+          </div>
+        </header>
 
-        <div class="workspace-grid">
-          <form id="run-form" class="control-panel">
-            <fieldset>
-              <legend data-i18n="scenarioLabel"></legend>
-              <div class="scenario-card">
-                <div class="scenario-icon" aria-hidden="true">1H</div>
-                <div>
-                  <strong data-i18n="scenarioTitle"></strong>
-                  <p data-i18n="scenarioDescription"></p>
+        <main id="main-content" class="main-content">
+          <section id="welcome" class="welcome-section" data-page-stage="welcome" aria-labelledby="hero-title">
+            <div class="welcome-copy">
+              <div class="demo-label"><span aria-hidden="true">◆</span><span data-i18n="demoDataLabel"></span></div>
+              <h1 id="hero-title" data-i18n="heroTitle"></h1>
+              <p class="hero-copy" data-i18n="heroCopy"></p>
+              <div class="technology-row" aria-label="Technology">
+                <span>Daytona</span><span>Nosana</span><span data-i18n="fourGateLabel"></span>
+              </div>
+            </div>
+            <aside class="next-action-card" aria-labelledby="next-action-title">
+              <span class="card-kicker" data-i18n="nextActionLabel"></span>
+              <h2 id="next-action-title" data-i18n="nextActionTitle"></h2>
+              <p data-i18n="nextActionDescription"></p>
+              <a class="primary-link" href="#goal-dataset">
+                <span data-i18n="nextActionButton"></span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+              </a>
+            </aside>
+          </section>
+
+          <section id="goal-dataset" class="page-section" data-page-stage="goal" aria-labelledby="workspace-title">
+            <div class="section-heading">
+              <div><span class="step-label">2 · <span data-i18n="navGoal"></span></span><h2 id="workspace-title" data-i18n="workspaceTitle"></h2></div>
+              <p data-i18n="workspaceHint"></p>
+            </div>
+
+            <form id="run-form" class="selection-card">
+              <fieldset>
+                <legend><span data-i18n="scenarioLabel"></span><small data-i18n="requiredLabel"></small></legend>
+                <div class="scenario-card">
+                  <div class="scenario-icon" aria-hidden="true">1h</div>
+                  <div><strong data-i18n="scenarioTitle"></strong><p data-i18n="scenarioDescription"></p></div>
+                  <span class="neutral-badge" data-i18n="fixedScenario"></span>
                 </div>
-                <span class="locked" data-i18n="fixedScenario"></span>
-              </div>
-            </fieldset>
+              </fieldset>
 
-            <fieldset>
-              <legend data-i18n="datasetLabel"></legend>
-              <div class="dataset-options">
-                <label class="dataset-card">
-                  <input type="radio" name="dataset" value="clean" checked />
-                  <span class="radio-indicator" aria-hidden="true"></span>
-                  <span class="dataset-copy">
-                    <strong data-i18n="cleanDataset"></strong>
-                    <small data-i18n="cleanDatasetDescription"></small>
-                    <code>clean_sensor.csv</code>
-                  </span>
-                  <span class="dataset-badge dataset-badge--clean" data-i18n="expectedPass"></span>
-                </label>
-                <label class="dataset-card">
-                  <input type="radio" name="dataset" value="contaminated" />
-                  <span class="radio-indicator" aria-hidden="true"></span>
-                  <span class="dataset-copy">
-                    <strong data-i18n="contaminatedDataset"></strong>
-                    <small data-i18n="contaminatedDatasetDescription"></small>
-                    <code>contaminated_sensor.csv</code>
-                  </span>
-                  <span class="dataset-badge dataset-badge--risk" data-i18n="expectedFail"></span>
-                </label>
-              </div>
-            </fieldset>
-
-            <button id="run-button" class="run-button" type="submit">
-              <span data-i18n="runAudit"></span>
-              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
-            </button>
-            <p class="privacy-note">
-              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 9V6a4 4 0 0 1 8 0v3M5 9h10v8H5z" /></svg>
-              <span data-i18n="privacyNote"></span>
-            </p>
-          </form>
-
-          <aside class="protocol-panel" aria-labelledby="protocol-title">
-            <div class="panel-label">
-              <span data-i18n="protocolLabel"></span>
-              <span id="timeline-progress">0 / 4</span>
+              <fieldset>
+                <legend><span data-i18n="datasetLabel"></span><small data-i18n="chooseOneLabel"></small></legend>
+                <div class="dataset-options">
+                  <label class="dataset-card">
+                    <input type="radio" name="dataset" value="clean" checked />
+                    <span class="radio-indicator" aria-hidden="true"></span>
+                    <span class="dataset-copy">
+                      <span class="demo-badge" data-i18n="demoBadge"></span>
+                      <strong data-i18n="cleanDataset"></strong>
+                      <small data-i18n="cleanDatasetDescription"></small>
+                      <code>clean_sensor.csv</code>
+                    </span>
+                    <span class="dataset-badge dataset-badge--clean" data-i18n="expectedPass"></span>
+                  </label>
+                  <label class="dataset-card">
+                    <input type="radio" name="dataset" value="contaminated" />
+                    <span class="radio-indicator" aria-hidden="true"></span>
+                    <span class="dataset-copy">
+                      <span class="demo-badge" data-i18n="demoBadge"></span>
+                      <strong data-i18n="contaminatedDataset"></strong>
+                      <small data-i18n="contaminatedDatasetDescription"></small>
+                      <code>contaminated_sensor.csv</code>
+                    </span>
+                    <span class="dataset-badge dataset-badge--risk" data-i18n="expectedFail"></span>
+                  </label>
+                </div>
+              </fieldset>
+            </form>
+            <div class="panel-actions">
+              <a class="secondary-link" href="#welcome" data-i18n="previousStep"></a>
+              <a class="primary-link compact-link" href="#gate-spec"><span data-i18n="reviewGatesAction"></span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg></a>
             </div>
-            <h3 id="protocol-title" data-i18n="protocolTitle"></h3>
-            <ol id="timeline" class="timeline">
-              <li data-step="client.intake">
-                <span class="timeline-marker"><b>01</b></span>
-                <div><strong data-i18n="stepIntake"></strong><small data-i18n="stepIntakeDescription"></small></div>
-                <span class="step-state" data-i18n="stateWaiting"></span>
-              </li>
-              <li data-step="nosana.gate_spec">
-                <span class="timeline-marker"><b>02</b></span>
-                <div><strong data-i18n="stepSandbox"></strong><small data-i18n="stepSandboxDescription"></small></div>
-                <span class="step-state" data-i18n="stateWaiting"></span>
-              </li>
-              <li data-step="daytona.validation">
-                <span class="timeline-marker"><b>03</b></span>
-                <div><strong data-i18n="stepEvaluate"></strong><small data-i18n="stepEvaluateDescription"></small></div>
-                <span class="step-state" data-i18n="stateWaiting"></span>
-              </li>
-              <li data-step="nosana.summary">
-                <span class="timeline-marker"><b>04</b></span>
-                <div><strong data-i18n="stepAttest"></strong><small data-i18n="stepAttestDescription"></small></div>
-                <span class="step-state" data-i18n="stateWaiting"></span>
-              </li>
-            </ol>
-          </aside>
-        </div>
-      </section>
+          </section>
 
-      <section id="status-region" class="status-region" aria-live="polite" aria-atomic="true">
-        <div id="empty-state" class="empty-state">
-          <div class="empty-orbit" aria-hidden="true"><span></span></div>
-          <div>
-            <h2 data-i18n="emptyTitle"></h2>
-            <p data-i18n="emptyDescription"></p>
-          </div>
-        </div>
+          <section id="gate-spec" class="page-section" data-page-stage="gates" aria-labelledby="gate-spec-title">
+            <div class="section-heading">
+              <div><span class="step-label">3 · <span data-i18n="navGates"></span></span><h2 id="gate-spec-title" data-i18n="gateSpecTitle"></h2></div>
+              <p data-i18n="gateSpecHint"></p>
+            </div>
+            <div class="gate-spec-grid">
+              <article><span class="gate-index">1</span><div><h3 data-i18n="gateRequiredColumns"></h3><p data-i18n="gateRequiredDescription"></p></div></article>
+              <article><span class="gate-index">2</span><div><h3 data-i18n="gateMissingRate"></h3><p data-i18n="gateMissingDescription"></p></div></article>
+              <article><span class="gate-index">3</span><div><h3 data-i18n="gateTimeOrder"></h3><p data-i18n="gateTimeDescription"></p></div></article>
+              <article><span class="gate-index">4</span><div><h3 data-i18n="gateLeakageColumns"></h3><p data-i18n="gateLeakageDescription"></p></div></article>
+            </div>
+            <div class="panel-actions">
+              <a class="secondary-link" href="#goal-dataset" data-i18n="previousStep"></a>
+              <a class="primary-link compact-link" href="#isolated-run"><span data-i18n="prepareRunAction"></span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg></a>
+            </div>
+          </section>
 
-        <div id="loading-state" class="loading-state" hidden>
-          <span class="loader" aria-hidden="true"></span>
-          <div>
-            <h2 data-i18n="runningTitle"></h2>
-            <p data-i18n="runningDescription"></p>
-          </div>
-        </div>
-
-        <div id="error-state" class="error-state" hidden>
-          <span class="error-mark" aria-hidden="true">!</span>
-          <div>
-            <h2 data-i18n="errorTitle"></h2>
-            <p id="error-message"></p>
-          </div>
-          <button id="retry-button" type="button" data-i18n="retryButton"></button>
-        </div>
-
-        <div id="result-state" class="result-state" hidden>
-          <div class="result-header">
-            <div>
-              <p class="section-index">03 / RESULT</p>
-              <div class="verdict-line">
-                <span id="verdict-badge" class="verdict-badge"></span>
-                <h2 id="verdict-title"></h2>
+          <section id="isolated-run" class="page-section" data-page-stage="run" aria-labelledby="protocol-title">
+            <div class="section-heading">
+              <div><span class="step-label">4 · <span data-i18n="navRun"></span></span><h2 id="protocol-title" data-i18n="protocolTitle"></h2></div>
+              <p data-i18n="privacyNote"></p>
+            </div>
+            <div class="run-layout">
+              <div class="timeline-card">
+                <div class="panel-label"><strong data-i18n="protocolLabel"></strong><span id="timeline-progress">0 / 4</span></div>
+                <ol id="timeline" class="timeline">
+                  <li data-step="client.intake"><span class="timeline-marker" aria-hidden="true">1</span><div><strong data-i18n="stepIntake"></strong><small data-i18n="stepIntakeDescription"></small></div><span class="step-state" data-i18n="stateWaiting"></span></li>
+                  <li data-step="nosana.gate_spec"><span class="timeline-marker" aria-hidden="true">2</span><div><strong data-i18n="stepSandbox"></strong><small data-i18n="stepSandboxDescription"></small></div><span class="step-state" data-i18n="stateWaiting"></span></li>
+                  <li data-step="daytona.validation"><span class="timeline-marker" aria-hidden="true">3</span><div><strong data-i18n="stepEvaluate"></strong><small data-i18n="stepEvaluateDescription"></small></div><span class="step-state" data-i18n="stateWaiting"></span></li>
+                  <li data-step="nosana.summary"><span class="timeline-marker" aria-hidden="true">4</span><div><strong data-i18n="stepAttest"></strong><small data-i18n="stepAttestDescription"></small></div><span class="step-state" data-i18n="stateWaiting"></span></li>
+                </ol>
               </div>
-              <div id="result-summary" class="result-summary"></div>
+              <aside class="run-action-card">
+                <span class="card-kicker" data-i18n="nextActionLabel"></span>
+                <h3 data-i18n="runActionTitle"></h3>
+                <p data-i18n="runActionDescription"></p>
+                <button id="run-button" class="run-button" type="submit" form="run-form">
+                  <span data-i18n="runAudit"></span>
+                  <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+                </button>
+                <p class="run-note"><span aria-hidden="true">ⓘ</span><span data-i18n="honestResultNote"></span></p>
+              </aside>
             </div>
-            <dl class="run-meta">
-              <div><dt data-i18n="runIdLabel"></dt><dd id="run-id"></dd></div>
-              <div><dt data-i18n="runStatusLabel"></dt><dd id="run-status"></dd></div>
-            </dl>
-          </div>
+          </section>
 
-          <div class="result-section-heading">
-            <div><span data-i18n="gateResultsLabel"></span><h3 data-i18n="gateResultsTitle"></h3></div>
-            <p data-i18n="gateResultsHint"></p>
-          </div>
-          <div id="gate-grid" class="gate-grid"></div>
-
-          <div class="evidence-panel">
-            <div class="evidence-heading">
-              <span class="evidence-seal" aria-hidden="true">GT</span>
-              <div><span data-i18n="evidenceLabel"></span><h3 data-i18n="evidenceTitle"></h3></div>
+          <section id="verdict" class="page-section verdict-section" data-page-stage="verdict" aria-labelledby="verdict-section-title">
+            <div class="section-heading">
+              <div><span class="step-label">5 · <span data-i18n="navVerdict"></span></span><h2 id="verdict-section-title" data-i18n="verdictSectionTitle"></h2></div>
+              <p data-i18n="gateResultsHint"></p>
             </div>
-            <dl class="evidence-grid">
-              <div><dt data-i18n="nosanaModelLabel"></dt><dd id="nosana-model"></dd></div>
-              <div><dt data-i18n="sandboxIdLabel"></dt><dd id="sandbox-id"></dd></div>
-              <div><dt data-i18n="exitCodeLabel"></dt><dd id="exit-code"></dd></div>
-              <div><dt data-i18n="durationLabel"></dt><dd id="duration"></dd></div>
-            </dl>
-          </div>
-        </div>
-      </section>
-    </main>
 
-    <footer>
-      <span>GateTrace</span>
-      <p data-i18n="footerText"></p>
-    </footer>
+            <div id="status-region" class="status-region" aria-live="polite">
+              <div id="empty-state" class="empty-state state-card">
+                <span class="state-icon state-icon--neutral" aria-hidden="true">○</span>
+                <div><h3 data-i18n="emptyTitle"></h3><p data-i18n="emptyDescription"></p><a href="#goal-dataset" data-i18n="emptyAction"></a></div>
+              </div>
+              <div id="loading-state" class="loading-state state-card" hidden>
+                <span class="loader" aria-hidden="true"></span>
+                <div><h3 data-i18n="runningTitle"></h3><p data-i18n="runningDescription"></p></div>
+              </div>
+              <div id="error-state" class="error-state state-card" hidden>
+                <span class="state-icon state-icon--error" aria-hidden="true">!</span>
+                <div><h3 data-i18n="errorTitle"></h3><p id="error-message"></p></div>
+                <button id="retry-button" type="button" data-i18n="retryButton"></button>
+              </div>
+
+              <div id="result-state" class="result-state" hidden>
+                <div class="result-header">
+                  <div>
+                    <span class="card-kicker" data-i18n="verdictStatusLabel"></span>
+                    <div class="verdict-line"><span id="verdict-badge" class="verdict-badge"></span><h3 id="verdict-title"></h3></div>
+                    <div id="result-summary" class="result-summary"></div>
+                  </div>
+                  <dl class="run-meta">
+                    <div><dt data-i18n="runIdLabel"></dt><dd id="run-id"></dd></div>
+                    <div><dt data-i18n="runStatusLabel"></dt><dd id="run-status"></dd></div>
+                  </dl>
+                </div>
+
+                <div class="result-section-heading">
+                  <div><span data-i18n="gateResultsLabel"></span><h3 data-i18n="gateResultsTitle"></h3></div>
+                  <p data-i18n="gateResultsHint"></p>
+                </div>
+                <div id="gate-grid" class="gate-grid"></div>
+
+                <div class="evidence-panel">
+                  <div class="evidence-heading">
+                    <span class="evidence-seal" aria-hidden="true">✓</span>
+                    <div><span data-i18n="evidenceLabel"></span><h3 data-i18n="evidenceTitle"></h3></div>
+                  </div>
+                  <dl class="evidence-grid">
+                    <div><dt data-i18n="nosanaModelLabel"></dt><dd id="nosana-model"></dd></div>
+                    <div><dt data-i18n="sandboxIdLabel"></dt><dd id="sandbox-id"></dd></div>
+                    <div><dt data-i18n="exitCodeLabel"></dt><dd id="exit-code"></dd></div>
+                    <div><dt data-i18n="durationLabel"></dt><dd id="duration"></dd></div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+            <div class="panel-actions panel-actions--start">
+              <a class="secondary-link" href="#goal-dataset" data-i18n="runAnotherAction"></a>
+            </div>
+          </section>
+        </main>
+
+        <footer><strong>GateTrace</strong><p data-i18n="footerText"></p></footer>
+      </div>
+    </div>
   </body>
 </html>

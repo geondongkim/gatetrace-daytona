@@ -9,12 +9,41 @@ const translations = {
   languageEn: { ko: "영어", en: "English" },
   languageBoth: { ko: "한영", en: "KO·EN" },
   languageSelector: { ko: "언어 선택", en: "Language selector" },
+  productDescriptor: { ko: "연구 데이터 검증", en: "Research data validation" },
+  workflowLabel: { ko: "검증 워크플로", en: "Verification workflow" },
+  workflowTitle: { ko: "현재 단계와 다음 행동", en: "Current stage and next action" },
+  navWelcome: { ko: "시작", en: "Welcome" },
+  navWelcomeHint: { ko: "목표와 흐름 확인", en: "Review the goal and flow" },
+  navGoal: { ko: "목표와 데이터셋", en: "Goal & dataset" },
+  navGoalHint: { ko: "데모 데이터 선택", en: "Choose demo data" },
+  navGates: { ko: "게이트 명세", en: "Gate specification" },
+  navGatesHint: { ko: "4개 검사 기준 확인", en: "Review four checks" },
+  navRun: { ko: "격리 실행", en: "Isolated run" },
+  navRunHint: { ko: "실행 흐름과 요청", en: "Run flow and request" },
+  navVerdict: { ko: "판정", en: "Verdict" },
+  navVerdictHint: { ko: "결과와 근거 확인", en: "Review results and evidence" },
+  openNavigation: { ko: "워크플로 메뉴 열기", en: "Open workflow navigation" },
+  currentStageLabel: { ko: "현재 단계", en: "Current stage" },
+  demoDataLabel: { ko: "MVP 데모 · 센서 CSV 예시", en: "MVP demo · sensor CSV example" },
+  demoBadge: { ko: "데모", en: "Demo" },
+  fourGateLabel: { ko: "4개 품질 게이트", en: "Four quality gates" },
+  nextActionLabel: { ko: "다음 행동", en: "Next action" },
+  nextActionTitle: { ko: "검증할 데모 데이터셋을 선택하세요.", en: "Choose the demo dataset to verify." },
+  nextActionDescription: { ko: "정상 또는 오염 샘플을 선택한 뒤 동일한 4개 게이트를 실행합니다.", en: "Choose the clean or contaminated sample, then run the same four gates." },
+  nextActionButton: { ko: "데이터셋 선택", en: "Choose dataset" },
+  previousStep: { ko: "이전 단계", en: "Previous step" },
+  reviewGatesAction: { ko: "게이트 명세 확인", en: "Review gate specification" },
+  prepareRunAction: { ko: "격리 실행 준비", en: "Prepare isolated run" },
+  runAnotherAction: { ko: "다른 데모 데이터 검증", en: "Verify another demo dataset" },
+  requiredLabel: { ko: "필수", en: "Required" },
+  chooseOneLabel: { ko: "하나 선택", en: "Choose one" },
   systemReady: { ko: "검증 시스템 준비", en: "Verification system ready" },
-  eyebrow: { ko: "산업 AI 데이터 게이트", en: "Industrial AI data gate" },
-  heroTitle: { ko: "학습 전에, 데이터를 증명합니다.", en: "Prove the data before it trains the model." },
+  systemReadyHint: { ko: "요청 전 결과 미정", en: "No verdict before a request" },
+  eyebrow: { ko: "연구 데이터 검증 게이트", en: "Research data validation gate" },
+  heroTitle: { ko: "연구에 쓰기 전에, 데이터를 증명합니다.", en: "Prove the data before using it in research." },
   heroCopy: {
-    ko: "GateTrace는 센서 데이터셋을 격리된 Daytona 샌드박스에서 검사하고, Nosana 모델의 판단과 실행 근거를 하나의 추적 가능한 기록으로 제공합니다.",
-    en: "GateTrace inspects sensor datasets in an isolated Daytona sandbox and returns a traceable record of the Nosana model decision and runtime evidence."
+    ko: "GateTrace는 논문·연구에 사용할 데이터를 제한 명세로 검사하고, Daytona 격리 실행의 판정과 근거를 하나의 기록으로 남깁니다. 이번 MVP는 센서 CSV로 실증합니다.",
+    en: "GateTrace validates data for research and paper development against a constrained specification, then preserves the Daytona isolated-run verdict and evidence in one record. This MVP demonstrates the workflow with sensor CSV files."
   },
   workspaceTitle: { ko: "검증 실행", en: "Run verification" },
   workspaceHint: { ko: "1시간 내 설비 고장 예측을 위한 결정론적 데모입니다.", en: "A deterministic demo for equipment failure prediction within one hour." },
@@ -36,12 +65,12 @@ const translations = {
   protocolTitle: { ko: "4단계 실행 흐름", en: "Four-step run flow" },
   stepIntake: { ko: "요청 접수", en: "Request intake" },
   stepIntakeDescription: { ko: "데이터셋과 시나리오 확인", en: "Dataset and scenario check" },
-  stepSandbox: { ko: "Nosana 게이트 설계", en: "Nosana gate design" },
-  stepSandboxDescription: { ko: "연구 목표에서 검증 규칙 생성", en: "Derive checks from the research goal" },
+  stepSandbox: { ko: "Nosana 제한 명세 생성", en: "Nosana constrained specification" },
+  stepSandboxDescription: { ko: "연구 목표를 허용된 4개 게이트로 변환", en: "Map the research goal to four allowed gates" },
   stepEvaluate: { ko: "Daytona 격리 검증", en: "Daytona isolated audit" },
   stepEvaluateDescription: { ko: "샌드박스에서 4개 게이트 평가", en: "Evaluate four gates in the sandbox" },
   stepAttest: { ko: "근거 기록", en: "Evidence record" },
-  stepAttestDescription: { ko: "Nosana 판단과 실행 정보 결합", en: "Nosana decision and runtime evidence" },
+  stepAttestDescription: { ko: "Daytona 판정과 Nosana 한영 설명 결합", en: "Combine the Daytona verdict with the Nosana bilingual explanation" },
   stateWaiting: { ko: "대기", en: "Waiting" },
   stateProcessing: { ko: "처리 중", en: "Processing" },
   stateComplete: { ko: "완료", en: "Complete" },
@@ -59,8 +88,8 @@ const translations = {
   verdictPass: { ko: "PASS", en: "PASS" },
   verdictFail: { ko: "FAIL", en: "FAIL" },
   verdictUnknown: { ko: "미확인", en: "UNKNOWN" },
-  verdictPassTitle: { ko: "학습 사용 가능", en: "Ready for training" },
-  verdictFailTitle: { ko: "학습 사용 차단", en: "Blocked from training" },
+  verdictPassTitle: { ko: "연구 사용 가능", en: "Ready for research use" },
+  verdictFailTitle: { ko: "연구 사용 차단", en: "Blocked from research use" },
   verdictUnknownTitle: { ko: "판정 확인 불가", en: "Verdict unavailable" },
   runIdLabel: { ko: "실행 ID", en: "Run ID" },
   runStatusLabel: { ko: "실행 상태", en: "Run status" },
@@ -71,6 +100,12 @@ const translations = {
   gateMissingRate: { ko: "결측률", en: "Missing rate" },
   gateTimeOrder: { ko: "시간 순서", en: "Time order" },
   gateLeakageColumns: { ko: "누수 열", en: "Leakage columns" },
+  gateSpecTitle: { ko: "판정을 만드는 4개 검사", en: "Four checks that form the verdict" },
+  gateSpecHint: { ko: "선택한 데모 데이터셋에 같은 기준을 적용합니다.", en: "The same criteria are applied to the selected demo dataset." },
+  gateRequiredDescription: { ko: "학습에 필요한 센서 열이 모두 있는지 확인합니다.", en: "Confirms that every required sensor column is present." },
+  gateMissingDescription: { ko: "특성값 결측 비율이 허용 상한 이내인지 확인합니다.", en: "Checks whether feature missingness stays within the allowed maximum." },
+  gateTimeDescription: { ko: "센서 관측 시간이 올바른 순서인지 확인합니다.", en: "Checks whether sensor observations are in chronological order." },
+  gateLeakageDescription: { ko: "미래 정보를 노출하는 금지 열이 없는지 확인합니다.", en: "Checks for forbidden columns that expose future information." },
   gateEvidenceMissing: { ko: "근거가 제공되지 않았습니다.", en: "No evidence was provided." },
   evidenceRequired: { ko: "필수 열", en: "Required columns" },
   evidencePresent: { ko: "확인된 열", en: "Present columns" },
@@ -88,20 +123,42 @@ const translations = {
   evidenceAdditional: { ko: "추가 근거", en: "Additional evidence" },
   evidenceLabel: { ko: "실행 근거", en: "Execution evidence" },
   evidenceTitle: { ko: "격리 실행 기록", en: "Isolated run record" },
+  runActionTitle: { ko: "선택한 데이터로 검증을 시작하세요.", en: "Start verification with the selected data." },
+  runActionDescription: { ko: "요청은 한 번만 전송되며 처리 중에는 중복 실행이 비활성화됩니다.", en: "The request is sent once, and duplicate runs are disabled while it is processing." },
+  honestResultNote: { ko: "응답이 없거나 유효하지 않으면 결과를 추정하지 않고 오류로 표시합니다.", en: "Missing or invalid responses are shown as errors; no result is inferred." },
+  verdictSectionTitle: { ko: "판정과 실행 근거", en: "Verdict and execution evidence" },
+  verdictStatusLabel: { ko: "현재 판정", en: "Current verdict" },
+  emptyAction: { ko: "데모 데이터셋 선택으로 이동", en: "Go to demo dataset selection" },
   nosanaModelLabel: { ko: "Nosana 모델", en: "Nosana model" },
   sandboxIdLabel: { ko: "Daytona 샌드박스 ID", en: "Daytona sandbox ID" },
   exitCodeLabel: { ko: "종료 코드", en: "Exit code" },
   durationLabel: { ko: "실행 시간", en: "Duration" },
   notProvided: { ko: "제공되지 않음", en: "Not provided" },
-  footerText: { ko: "검증 가능한 데이터 · 격리된 실행 · 추적 가능한 판단", en: "Verifiable data · isolated execution · traceable decisions" }
+  footerText: { ko: "연구 데이터 · 격리 실행 · 추적 가능한 판정", en: "Research data · isolated execution · traceable verdict" }
 };
 
 const gateDefinitions = [
   { id: "required_columns", labelKey: "gateRequiredColumns" },
   { id: "missing_rate", labelKey: "gateMissingRate" },
   { id: "time_order", labelKey: "gateTimeOrder" },
-  { id: "leakage_columns", labelKey: "gateLeakageColumns" }
+  { id: "forbidden_columns", labelKey: "gateLeakageColumns" }
 ];
+
+const workflowStageKeys = {
+  welcome: "navWelcome",
+  goal: "navGoal",
+  gates: "navGates",
+  run: "navRun",
+  verdict: "navVerdict"
+};
+
+const workflowHashStages = {
+  "#welcome": "welcome",
+  "#goal-dataset": "goal",
+  "#gate-spec": "gates",
+  "#isolated-run": "run",
+  "#verdict": "verdict"
+};
 
 const elements = {
   form: document.querySelector("#run-form"),
@@ -123,7 +180,10 @@ const elements = {
   nosanaModel: document.querySelector("#nosana-model"),
   sandboxId: document.querySelector("#sandbox-id"),
   exitCode: document.querySelector("#exit-code"),
-  duration: document.querySelector("#duration")
+  duration: document.querySelector("#duration"),
+  navToggle: document.querySelector("#nav-toggle"),
+  currentStage: document.querySelector("#current-stage"),
+  workflowLinks: document.querySelectorAll("[data-workflow-stage]")
 };
 
 let currentLanguage = readStoredLanguage();
@@ -131,6 +191,7 @@ let currentResult = null;
 let currentErrorKey = null;
 let currentErrorSuffix = "";
 let isRunning = false;
+let currentWorkflowStage = "welcome";
 
 function readStoredLanguage() {
   try {
@@ -190,10 +251,31 @@ function translateStaticUi() {
     button.textContent = translations[key][language === "both" ? "ko" : language];
     button.setAttribute("aria-pressed", String(language === currentLanguage));
   });
+  updateWorkflowStageLabel();
   updateRunButton();
   updateTimelineLabels();
   if (currentErrorKey) renderErrorMessage();
   if (currentResult) renderResult(currentResult);
+}
+
+function updateWorkflowStageLabel() {
+  elements.currentStage.replaceChildren(translationFragment(workflowStageKeys[currentWorkflowStage]));
+}
+
+function setWorkflowStage(stage) {
+  if (!workflowStageKeys[stage]) return;
+  currentWorkflowStage = stage;
+  document.body.dataset.activeStage = stage;
+  elements.workflowLinks.forEach((link) => {
+    if (link.dataset.workflowStage === stage) link.setAttribute("aria-current", "step");
+    else link.removeAttribute("aria-current");
+  });
+  updateWorkflowStageLabel();
+}
+
+function closeWorkflowNavigation() {
+  document.body.classList.remove("nav-open");
+  elements.navToggle.setAttribute("aria-expanded", "false");
 }
 
 function setLanguage(language) {
@@ -230,6 +312,7 @@ function updateTimeline(mode, timeline = null) {
     if (!state) {
       if (mode === "complete" && (serverStates.size === 0 || item.dataset.step === "client.intake")) state = "complete";
       else if (mode === "running" && index === 0) state = "processing";
+      else if (mode === "error" && index === 0) state = "error";
       else state = "waiting";
     }
     const isError = state === "error";
@@ -418,8 +501,10 @@ function showError(key, suffix = "") {
   currentErrorKey = key;
   currentErrorSuffix = suffix;
   renderErrorMessage();
-  updateTimeline("idle");
+  updateTimeline("error");
   setVisibleState("error");
+  setWorkflowStage("verdict");
+  window.history.replaceState(null, "", "#verdict");
 }
 
 async function runAudit() {
@@ -431,6 +516,7 @@ async function runAudit() {
   updateRunButton();
   updateTimeline("running");
   setVisibleState("loading");
+  setWorkflowStage("run");
 
   try {
     const response = await fetch("/api/runs", {
@@ -456,6 +542,8 @@ async function runAudit() {
     renderResult(currentResult);
     updateTimeline("complete", currentResult.timeline);
     setVisibleState("result");
+    setWorkflowStage("verdict");
+    window.history.replaceState(null, "", "#verdict");
   } catch (_error) {
     showError("errorNetwork");
   } finally {
@@ -468,6 +556,48 @@ document.querySelectorAll(".language-button").forEach((button) => {
   button.addEventListener("click", () => setLanguage(button.dataset.language));
 });
 
+elements.navToggle.addEventListener("click", () => {
+  const isOpen = document.body.classList.toggle("nav-open");
+  elements.navToggle.setAttribute("aria-expanded", String(isOpen));
+});
+
+elements.workflowLinks.forEach((link) => {
+  link.addEventListener("click", () => {
+    setWorkflowStage(link.dataset.workflowStage);
+    closeWorkflowNavigation();
+  });
+});
+
+elements.form.querySelectorAll('input[name="dataset"]').forEach((input) => {
+  input.addEventListener("change", () => {
+    currentResult = null;
+    currentErrorKey = null;
+    currentErrorSuffix = "";
+    updateTimeline("idle");
+    setVisibleState("empty");
+  });
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeWorkflowNavigation();
+});
+
+window.addEventListener("hashchange", () => {
+  setWorkflowStage(workflowHashStages[window.location.hash] || "welcome");
+});
+
+const stageObserver = new IntersectionObserver(
+  (entries) => {
+    const visible = entries
+      .filter((entry) => entry.isIntersecting)
+      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (visible) setWorkflowStage(visible.target.dataset.pageStage);
+  },
+  { rootMargin: "-20% 0px -60% 0px", threshold: [0, 0.1, 0.5] }
+);
+
+document.querySelectorAll("[data-page-stage]").forEach((section) => stageObserver.observe(section));
+
 elements.form.addEventListener("submit", (event) => {
   event.preventDefault();
   runAudit();
@@ -475,4 +605,5 @@ elements.form.addEventListener("submit", (event) => {
 elements.retryButton.addEventListener("click", runAudit);
 
 updateTimeline("idle");
+setWorkflowStage(workflowHashStages[window.location.hash] || "welcome");
 translateStaticUi();

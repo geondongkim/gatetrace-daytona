@@ -3,5 +3,10 @@
 __pycache__/
 .pytest_cache/
 .ruff_cache/
+.playwright-cli/
 *.py[cod]
 .DS_Store
+/create_a_sandbox.py
+.vercel
+.env*
+tmp/
