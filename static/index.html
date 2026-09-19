@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#08110f" />
+    <title>GateTrace</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="GateTrace">
+        <span class="brand-mark" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span>GateTrace</span>
+      </a>
+
+      <div class="header-actions">
+        <div class="system-pill">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span data-i18n="systemReady"></span>
+        </div>
+        <div class="language-switcher" role="group" data-i18n-aria="languageSelector">
+          <button class="language-button" type="button" data-language="ko"></button>
+          <button class="language-button" type="button" data-language="en"></button>
+          <button class="language-button" type="button" data-language="both"></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="eyebrow"><span>01</span><span data-i18n="eyebrow"></span></div>
+        <h1 id="hero-title" data-i18n="heroTitle"></h1>
+        <p class="hero-copy" data-i18n="heroCopy"></p>
+        <div class="trust-row" aria-label="Technology">
+          <span>Daytona</span><i></i><span>Nosana</span><i></i><span>4 Gate Protocol</span>
+        </div>
+      </section>
+
+      <section class="workspace" aria-labelledby="workspace-title">
+        <div class="workspace-heading">
+          <div>
+            <p class="section-index">02 / RUN</p>
+            <h2 id="workspace-title" data-i18n="workspaceTitle"></h2>
+          </div>
+          <p data-i18n="workspaceHint"></p>
+        </div>
+
+        <div class="workspace-grid">
+          <form id="run-form" class="control-panel">
+            <fieldset>
+              <legend data-i18n="scenarioLabel"></legend>
+              <div class="scenario-card">
+                <div class="scenario-icon" aria-hidden="true">1H</div>
+                <div>
+                  <strong data-i18n="scenarioTitle"></strong>
+                  <p data-i18n="scenarioDescription"></p>
+                </div>
+                <span class="locked" data-i18n="fixedScenario"></span>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend data-i18n="datasetLabel"></legend>
+              <div class="dataset-options">
+                <label class="dataset-card">
+                  <input type="radio" name="dataset" value="clean" checked />
+                  <span class="radio-indicator" aria-hidden="true"></span>
+                  <span class="dataset-copy">
+                    <strong data-i18n="cleanDataset"></strong>
+                    <small data-i18n="cleanDatasetDescription"></small>
+                    <code>clean_sensor.csv</code>
+                  </span>
+                  <span class="dataset-badge dataset-badge--clean" data-i18n="expectedPass"></span>
+                </label>
+                <label class="dataset-card">
+                  <input type="radio" name="dataset" value="contaminated" />
+                  <span class="radio-indicator" aria-hidden="true"></span>
+                  <span class="dataset-copy">
+                    <strong data-i18n="contaminatedDataset"></strong>
+                    <small data-i18n="contaminatedDatasetDescription"></small>
+                    <code>contaminated_sensor.csv</code>
+                  </span>
+                  <span class="dataset-badge dataset-badge--risk" data-i18n="expectedFail"></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <button id="run-button" class="run-button" type="submit">
+              <span data-i18n="runAudit"></span>
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg>
+            </button>
+            <p class="privacy-note">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 9V6a4 4 0 0 1 8 0v3M5 9h10v8H5z" /></svg>
+              <span data-i18n="privacyNote"></span>
+            </p>
+          </form>
+
+          <aside class="protocol-panel" aria-labelledby="protocol-title">
+            <div class="panel-label">
+              <span data-i18n="protocolLabel"></span>
+              <span id="timeline-progress">0 / 4</span>
+            </div>
+            <h3 id="protocol-title" data-i18n="protocolTitle"></h3>
+            <ol id="timeline" class="timeline">
+              <li data-step="client.intake">
+                <span class="timeline-marker"><b>01</b></span>
+                <div><strong data-i18n="stepIntake"></strong><small data-i18n="stepIntakeDescription"></small></div>
+                <span class="step-state" data-i18n="stateWaiting"></span>
+              </li>
+              <li data-step="nosana.gate_spec">
+                <span class="timeline-marker"><b>02</b></span>
+                <div><strong data-i18n="stepSandbox"></strong><small data-i18n="stepSandboxDescription"></small></div>
+                <span class="step-state" data-i18n="stateWaiting"></span>
+              </li>
+              <li data-step="daytona.validation">
+                <span class="timeline-marker"><b>03</b></span>
+                <div><strong data-i18n="stepEvaluate"></strong><small data-i18n="stepEvaluateDescription"></small></div>
+                <span class="step-state" data-i18n="stateWaiting"></span>
+              </li>
+              <li data-step="nosana.summary">
+                <span class="timeline-marker"><b>04</b></span>
+                <div><strong data-i18n="stepAttest"></strong><small data-i18n="stepAttestDescription"></small></div>
+                <span class="step-state" data-i18n="stateWaiting"></span>
+              </li>
+            </ol>
+          </aside>
+        </div>
+      </section>
+
+      <section id="status-region" class="status-region" aria-live="polite" aria-atomic="true">
+        <div id="empty-state" class="empty-state">
+          <div class="empty-orbit" aria-hidden="true"><span></span></div>
+          <div>
+            <h2 data-i18n="emptyTitle"></h2>
+            <p data-i18n="emptyDescription"></p>
+          </div>
+        </div>
+
+        <div id="loading-state" class="loading-state" hidden>
+          <span class="loader" aria-hidden="true"></span>
+          <div>
+            <h2 data-i18n="runningTitle"></h2>
+            <p data-i18n="runningDescription"></p>
+          </div>
+        </div>
+
+        <div id="error-state" class="error-state" hidden>
+          <span class="error-mark" aria-hidden="true">!</span>
+          <div>
+            <h2 data-i18n="errorTitle"></h2>
+            <p id="error-message"></p>
+          </div>
+          <button id="retry-button" type="button" data-i18n="retryButton"></button>
+        </div>
+
+        <div id="result-state" class="result-state" hidden>
+          <div class="result-header">
+            <div>
+              <p class="section-index">03 / RESULT</p>
+              <div class="verdict-line">
+                <span id="verdict-badge" class="verdict-badge"></span>
+                <h2 id="verdict-title"></h2>
+              </div>
+              <div id="result-summary" class="result-summary"></div>
+            </div>
+            <dl class="run-meta">
+              <div><dt data-i18n="runIdLabel"></dt><dd id="run-id"></dd></div>
+              <div><dt data-i18n="runStatusLabel"></dt><dd id="run-status"></dd></div>
+            </dl>
+          </div>
+
+          <div class="result-section-heading">
+            <div><span data-i18n="gateResultsLabel"></span><h3 data-i18n="gateResultsTitle"></h3></div>
+            <p data-i18n="gateResultsHint"></p>
+          </div>
+          <div id="gate-grid" class="gate-grid"></div>
+
+          <div class="evidence-panel">
+            <div class="evidence-heading">
+              <span class="evidence-seal" aria-hidden="true">GT</span>
+              <div><span data-i18n="evidenceLabel"></span><h3 data-i18n="evidenceTitle"></h3></div>
+            </div>
+            <dl class="evidence-grid">
+              <div><dt data-i18n="nosanaModelLabel"></dt><dd id="nosana-model"></dd></div>
+              <div><dt data-i18n="sandboxIdLabel"></dt><dd id="sandbox-id"></dd></div>
+              <div><dt data-i18n="exitCodeLabel"></dt><dd id="exit-code"></dd></div>
+              <div><dt data-i18n="durationLabel"></dt><dd id="duration"></dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>GateTrace</span>
+      <p data-i18n="footerText"></p>
+    </footer>
+  </body>
+</html>
