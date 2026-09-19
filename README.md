@@ -30,7 +30,7 @@ Live demo: https://gatetrace-daytona.vercel.app
 | Nosana 명세·설명 생성 | 라이브 확인됨 | `qwen/qwen3.8-27b`가 네 게이트 명세와 한영 요약을 생성했고, 응답에서 `plan_generated=true`, `summary_generated=true`를 확인했습니다. 실패 시에는 명시적 fallback으로 전환됩니다. |
 | 결정론·대역 기반 테스트 | 확인됨 | `python3 -m pytest -p no:cacheprovider -q`에서 37개 테스트가 통과했습니다. |
 | 데모 데이터 계약 | 확인됨 | 정상 CSV는 4개 게이트를 통과하고 오염 CSV는 누락률·시간 순서·누출 열 게이트에 실패하도록 고정 테스트가 검증합니다. |
-| 증강 확장 | 로컬 라이브 확인됨 | 실제 Nosana·Daytona 계정으로 정상 24→후보 6→채택 6 `ADOPTED`, 데이터 오염 24→후보 1→채택 0 `QUARANTINED`를 확인했습니다. |
+| 증강 확장 | 로컬·Vercel 라이브 확인됨 | 실제 Nosana·Daytona 계정으로 정상 24→후보 6→채택 6 `ADOPTED`, 데이터 오염 24→후보 1→채택 0 `QUARANTINED`를 로컬과 프로덕션에서 확인했습니다. |
 | 실행 시간 | 실측됨 | 로컬과 Vercel의 반복 라이브 실행은 약 20.8~41.1초였습니다. 해커톤 데모의 네트워크·모델 상태에 따라 달라질 수 있습니다. |
 | 공개 저장소 | 확인됨 | https://github.com/geondongkim/gatetrace-daytona |
 | 외부 데모 URL | 확인됨 | https://gatetrace-daytona.vercel.app 의 `/`, `/api/health`, 실제 정상 샘플 E2E를 확인했습니다. |
@@ -130,7 +130,7 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -p no:cacheprovider -q
 
 현재 구현은 명시적 `training` 파티션 전용 `bounded_jitter` 하나로 제한되며 validation/test 행은 후보화하지 않습니다. 후보 생성 후 기존 스키마·결측률·시간 순서·누수 게이트를 다시 실행합니다. 네 게이트가 모두 통과하면 후보 묶음을 `ADOPTED`, 하나라도 실패하면 채택 0건인 `QUARANTINED`로 처리합니다. Nosana 설명은 이 판정을 바꿀 수 없고 Daytona 실패 시 로컬로 우회하지 않습니다.
 
-로컬 결정론 검증과 실제 Nosana·Daytona 계정 실행에서 정상 fixture는 6개 후보가 모두 채택됐고 데이터 오염 fixture는 실패 게이트로 채택되지 않았습니다. Vercel의 신규 엔드포인트 E2E는 배포 후 별도로 확인합니다.
+로컬 결정론 검증과 실제 Nosana·Daytona 계정 실행에서 정상 fixture는 6개 후보가 모두 채택됐고 데이터 오염 fixture는 실패 게이트로 채택되지 않았습니다. Vercel 프로덕션에서도 같은 판정을 확인했으며, 2026-09-19 실측 실행 시간은 정상 19.008초, 데이터 오염 16.017초였습니다.
 
 데스크톱 결과 화면과 stale 상태 회귀는 `./tests/verify_augmentation_ui.sh`로 실측합니다. 이 검사는 1366×768에서 결과 섹션이 viewport와 콘텐츠 영역 안에 들어오는지, 데이터셋 변경 후 이전 `ADOPTED`가 제거되는지, 320×812에서 가로 오버플로우가 없는지 확인합니다.
 

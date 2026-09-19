@@ -15,8 +15,8 @@
 - [x] Vercel 프로덕션 배포 https://gatetrace-daytona.vercel.app 의 루트·헬스·정상 샘플 E2E 확인
 - [x] 배포 URL 320×812에서 가로 오버플로우 없음, 모바일 메뉴 동작 확인
 - [x] 로컬 실제 Nosana·Daytona 증강 E2E: 정상 `ADOPTED` 6/6, 데이터 오염 `QUARANTINED` 0/1 확인
-- [ ] Vercel 배포 URL에서 신규 `/api/augmentations` E2E 확인
-- [ ] 캡처와 로그에 API 키, 토큰, 이메일, 내부 URL, 원본 민감 데이터가 없는지 확인
+- [x] Vercel 배포 URL에서 신규 `/api/augmentations` E2E: 정상 `ADOPTED` 6/6, 데이터 오염 `QUARANTINED` 0/1 확인
+- [x] 캡처와 스테이징 파일에 API 키·토큰·이메일·내부 URL·원본 민감 데이터가 없는지 확인
 
 ## 라이브 데모 순서
 
