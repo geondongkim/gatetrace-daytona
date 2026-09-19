@@ -80,6 +80,34 @@ class RunRequest(StrictModel):
     research_goal: str = Field(min_length=1, max_length=1000)
 
 
+class AugmentationPlan(StrictModel):
+    method: Literal["bounded_jitter"] = "bounded_jitter"
+    partition: Literal["training"] = "training"
+    count: int = Field(default=6, ge=1, le=12)
+    seed: int = Field(default=20260919, ge=0, le=2_147_483_647)
+    feature_columns: list[SafeColumn] = Field(min_length=1, max_length=8)
+    max_relative_delta: float = Field(default=0.01, gt=0, le=0.05)
+
+    @model_validator(mode="after")
+    def supported_features_only(self) -> "AugmentationPlan":
+        supported = {
+            "temperature_c",
+            "vibration_mm_s",
+            "pressure_bar",
+            "rpm",
+        }
+        if not set(self.feature_columns).issubset(supported):
+            raise ValueError("augmentation plan referenced an unsupported feature")
+        if len(self.feature_columns) != len(set(self.feature_columns)):
+            raise ValueError("augmentation feature columns must be unique")
+        return self
+
+
+class AugmentationRequest(StrictModel):
+    dataset_id: Literal["clean", "contaminated"]
+    research_goal: str = Field(min_length=1, max_length=1000)
+
+
 class GateResult(StrictModel):
     id: GateId
     status: Literal["PASS", "FAIL"]
@@ -109,6 +137,54 @@ class RunResponse(StrictModel):
     plan_generated: bool
     summary_generated: bool
     gates: list[GateResult]
+    summary: BilingualSummary
+    timeline: list[TimelineItem]
+
+
+class LineageItem(StrictModel):
+    derived_row_id: str = Field(
+        min_length=1, max_length=100, pattern=r"^aug-[0-9]+-[0-9]{3}$"
+    )
+    source_row_ids: list[str] = Field(min_length=1, max_length=4)
+    transform: Literal["bounded_jitter"]
+    seed: int = Field(ge=0)
+    parameters: dict[str, Any]
+
+
+class AdoptedCandidate(StrictModel):
+    derived_row_id: str = Field(
+        min_length=1, max_length=100, pattern=r"^aug-[0-9]+-[0-9]{3}$"
+    )
+    source_row_id: str = Field(
+        min_length=1, max_length=100, pattern=r"^source-row-[0-9]{3}$"
+    )
+    partition: Literal["training"]
+    timestamp: str = Field(min_length=1, max_length=64)
+    equipment_id: str = Field(min_length=1, max_length=64)
+    temperature_c: float
+    vibration_mm_s: float
+    pressure_bar: float
+    rpm: int
+    failure_within_1h: Literal[0, 1]
+
+
+class AugmentationResponse(StrictModel):
+    run_id: str
+    status: Literal["COMPLETED"] = "COMPLETED"
+    verdict: Literal["ADOPTED", "QUARANTINED"]
+    dataset_id: Literal["clean", "contaminated"]
+    sandbox_id: str
+    nosana_model_id: str | None
+    duration_ms: int = Field(ge=0)
+    plan_generated: bool
+    summary_generated: bool
+    augmentation_plan: AugmentationPlan
+    source_rows: int = Field(ge=0)
+    candidate_rows: int = Field(ge=0)
+    adopted_rows: int = Field(ge=0)
+    adopted_candidates: list[AdoptedCandidate]
+    gates: list[GateResult]
+    lineage: list[LineageItem]
     summary: BilingualSummary
     timeline: list[TimelineItem]
 

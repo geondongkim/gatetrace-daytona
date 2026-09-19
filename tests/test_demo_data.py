@@ -17,6 +17,7 @@ REQUIRED_COLUMNS = {
     "pressure_bar",
     "rpm",
     "failure_within_1h",
+    "partition",
 }
 FEATURE_COLUMNS = (
     "temperature_c",
@@ -80,6 +81,16 @@ def test_demo_labels_are_binary_and_cover_both_outcomes() -> None:
         _, rows = load_dataset(name)
         labels = {row["failure_within_1h"] for row in rows}
         assert labels == {"0", "1"}
+
+
+def test_demo_partitions_are_explicit_and_keep_holdout_rows_out_of_training() -> None:
+    for name in ("clean_sensor.csv", "contaminated_sensor.csv"):
+        _, rows = load_dataset(name)
+        partitions = [row["partition"] for row in rows]
+
+        assert partitions[:16] == ["training"] * 16
+        assert partitions[16:20] == ["validation"] * 4
+        assert partitions[20:] == ["test"] * 4
 
 
 def test_static_ui_has_language_persistence_and_exact_run_contract() -> None:
@@ -174,7 +185,8 @@ def test_desktop_spa_shows_one_workflow_panel_without_document_scroll() -> None:
 
     assert '<body data-active-stage="welcome">' in page
     assert ".main-content > section { display: none; }" in styles
-    assert 'body[data-active-stage="verdict"] #verdict { display: block; }' in styles
+    assert 'body[data-active-stage="verdict"] #verdict,' in styles
+    assert 'body[data-active-stage="augmentation"] #augmentation-lab { display: block; }' in styles
     assert "grid-template-rows: 64px minmax(0, 1fr) 44px" in styles
     assert "height: 100vh" in styles
     assert "document.body.dataset.activeStage = stage" in script
@@ -197,3 +209,26 @@ def test_frontend_uses_backend_forbidden_columns_gate_id() -> None:
     )
 
     assert '{ id: "forbidden_columns", labelKey: "gateLeakageColumns" }' in script
+
+
+def test_first_stage_and_contamination_copy_are_consistent_in_each_language() -> None:
+    script = (STATIC_DIR / "app.js").read_text(encoding="utf-8")
+
+    assert 'navWelcome: { ko: "시작", en: "Start" }' in script
+    assert 'contaminatedDataset: { ko: "데이터 오염 샘플", en: "Contaminated data" }' in script
+    assert 'ko: "오염 데이터"' not in script
+
+
+def test_augmentation_extension_keeps_lineage_and_language_contracts_visible() -> None:
+    page = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    script = (STATIC_DIR / "app.js").read_text(encoding="utf-8")
+
+    assert 'id="augmentation-lab"' in page
+    assert 'id="augmentation-button"' in page
+    assert 'source_row_id → derived_row_id · seed · parameters' in page
+    assert 'fetch("/api/augmentations"' in script
+    assert 'navAugmentation: { ko: "증강 실험실", en: "Augmentation lab" }' in script
+    assert 'augmentationAdopted: { ko: "후보 채택", en: "Candidates adopted" }' in script
+    assert "function resetAugmentationState()" in script
+    dataset_change = script.split("elements.form.querySelectorAll('input[name=\"dataset\"]')", 1)[1]
+    assert "resetAugmentationState();" in dataset_change

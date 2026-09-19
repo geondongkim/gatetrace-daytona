@@ -28,8 +28,9 @@ Live demo: https://gatetrace-daytona.vercel.app
 | GateTrace 입력·판정 API | 확인됨 | `POST /api/runs`의 정상 데이터는 `APPROVED`, 오염 데이터는 `QUARANTINED`를 반환했습니다. |
 | Daytona 검증 실행 | 라이브 확인됨 | 실제 샌드박스에서 두 입력을 실행했고 각각 약 4.4초와 4.3초가 걸렸습니다. `delete(..., wait=True)` 이후 두 샌드박스가 목록에 남지 않은 것을 확인했습니다. |
 | Nosana 명세·설명 생성 | 라이브 확인됨 | `qwen/qwen3.8-27b`가 네 게이트 명세와 한영 요약을 생성했고, 응답에서 `plan_generated=true`, `summary_generated=true`를 확인했습니다. 실패 시에는 명시적 fallback으로 전환됩니다. |
-| 결정론·대역 기반 테스트 | 확인됨 | `python3 -m pytest -p no:cacheprovider -q`에서 18개 테스트가 통과했습니다. |
+| 결정론·대역 기반 테스트 | 확인됨 | `python3 -m pytest -p no:cacheprovider -q`에서 37개 테스트가 통과했습니다. |
 | 데모 데이터 계약 | 확인됨 | 정상 CSV는 4개 게이트를 통과하고 오염 CSV는 누락률·시간 순서·누출 열 게이트에 실패하도록 고정 테스트가 검증합니다. |
+| 증강 확장 | 로컬 라이브 확인됨 | 실제 Nosana·Daytona 계정으로 정상 24→후보 6→채택 6 `ADOPTED`, 데이터 오염 24→후보 1→채택 0 `QUARANTINED`를 확인했습니다. |
 | 실행 시간 | 실측됨 | 로컬과 Vercel의 반복 라이브 실행은 약 20.8~41.1초였습니다. 해커톤 데모의 네트워크·모델 상태에 따라 달라질 수 있습니다. |
 | 공개 저장소 | 확인됨 | https://github.com/geondongkim/gatetrace-daytona |
 | 외부 데모 URL | 확인됨 | https://gatetrace-daytona.vercel.app 의 `/`, `/api/health`, 실제 정상 샘플 E2E를 확인했습니다. |
@@ -111,7 +112,7 @@ uvicorn app:app --reload
 curl --fail --silent http://127.0.0.1:8000/api/health
 ```
 
-전체 로컬 테스트는 다음 명령으로 실행합니다. 2026-09-19 현재 18개 테스트 통과를 확인했습니다. 테스트 스위트의 외부 서비스 호출은 대역을 사용하며, 위 표의 Daytona 라이브 결과는 별도 실제 실행으로 확인했습니다.
+전체 로컬 테스트는 다음 명령으로 실행합니다. 2026-09-19 현재 37개 테스트 통과를 확인했습니다. 테스트 스위트의 외부 서비스 호출은 대역을 사용하며, 위 표의 Daytona 라이브 결과는 별도 실제 실행으로 확인했습니다.
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -p no:cacheprovider -q
@@ -123,15 +124,19 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -p no:cacheprovider -q
 
 ## 발표 자료
 
-## 확장 로드맵: 증거가 남는 데이터 증강
+## 기능 확장: 증거가 남는 데이터 증강
 
-데이터가 부족한 연구에서는 Nosana가 허용 변환, 생성량, 시드, 특징값 경계, 사후 검사로 구성된 제한형 증강 명세를 만들고, Daytona가 호스트 소유 변환 코드만 격리 실행하도록 확장할 수 있습니다. 생성된 행이나 윈도에는 원본 구간 ID, 변환명, 파라미터, 시드, `synthetic=true`를 남깁니다.
+`POST /api/augmentations`는 데이터가 부족한 연구를 위한 독립 확장입니다. Nosana가 허용 변환, 생성량, 시드, 특징값 경계로 구성된 제한형 명세를 만들고, Daytona가 호스트 소유 변환 코드만 격리 실행합니다. 응답은 각 후보의 원본 행 ID, 파생 행 ID, 변환명, 파라미터와 시드를 구조화된 계보로 남기며, 채택된 안전한 데모 행은 `adopted_candidates`로 반환합니다.
 
-증강은 시간 기준 train/validation/test 분리 뒤 학습 파티션에만 적용합니다. jitter, magnitude scaling, window slicing, 제한된 time-warp부터 시작하고, 완료 후 스키마·결측률·시간 순서·누수·분포 이동 게이트를 다시 실행합니다. 하나라도 실패하면 증강 묶음 전체를 `QUARANTINED`로 처리합니다. 이 흐름은 현재 MVP의 다음 단계이며 아직 구현 완료 기능으로 주장하지 않습니다.
+현재 구현은 명시적 `training` 파티션 전용 `bounded_jitter` 하나로 제한되며 validation/test 행은 후보화하지 않습니다. 후보 생성 후 기존 스키마·결측률·시간 순서·누수 게이트를 다시 실행합니다. 네 게이트가 모두 통과하면 후보 묶음을 `ADOPTED`, 하나라도 실패하면 채택 0건인 `QUARANTINED`로 처리합니다. Nosana 설명은 이 판정을 바꿀 수 없고 Daytona 실패 시 로컬로 우회하지 않습니다.
+
+로컬 결정론 검증과 실제 Nosana·Daytona 계정 실행에서 정상 fixture는 6개 후보가 모두 채택됐고 데이터 오염 fixture는 실패 게이트로 채택되지 않았습니다. Vercel의 신규 엔드포인트 E2E는 배포 후 별도로 확인합니다.
+
+데스크톱 결과 화면과 stale 상태 회귀는 `./tests/verify_augmentation_ui.sh`로 실측합니다. 이 검사는 1366×768에서 결과 섹션이 viewport와 콘텐츠 영역 안에 들어오는지, 데이터셋 변경 후 이전 `ADOPTED`가 제거되는지, 320×812에서 가로 오버플로우가 없는지 확인합니다.
 
 구체적인 실제 데이터 후보와 논문, 라이선스, 샘플링 방법은 `research/REAL_DATA_OPTIONS.md`에 정리했습니다.
 
-8장 Marp 원본은 `presentation/GateTrace_3min_Pitch.marp.md`에 있습니다. Paperline 테마와 Pretendard 글꼴은 `presentation/` 아래에 복사되어 원본 템플릿과 독립적으로 렌더링할 수 있습니다.
+8장 Marp 원본은 한국어 `presentation/GateTrace_3min_Pitch.marp.md`, 영어 `presentation/GateTrace_3min_Pitch.en.marp.md`, 한영 `presentation/GateTrace_3min_Pitch.bilingual.marp.md`로 구분했습니다. Paperline 테마와 Pretendard 글꼴은 `presentation/` 아래에 복사되어 원본 템플릿과 독립적으로 렌더링할 수 있습니다.
 
 ```bash
 npx --yes @marp-team/marp-cli@4.5.1 \

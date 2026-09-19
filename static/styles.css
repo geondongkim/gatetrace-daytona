@@ -256,7 +256,8 @@ body[data-active-stage="welcome"] #welcome { display: grid; }
 body[data-active-stage="goal"] #goal-dataset,
 body[data-active-stage="gates"] #gate-spec,
 body[data-active-stage="run"] #isolated-run,
-body[data-active-stage="verdict"] #verdict { display: block; }
+body[data-active-stage="verdict"] #verdict,
+body[data-active-stage="augmentation"] #augmentation-lab { display: block; }
 
 .welcome-section {
   display: grid;
@@ -632,6 +633,51 @@ h1 > .i18n-secondary { font-size: 0.58em; }
 .evidence-grid dt { margin-bottom: 0.375rem; color: var(--text-secondary); font-size: 0.8125rem; }
 .evidence-grid dd { margin: 0; font-family: var(--font-mono); font-size: 0.8125rem; overflow-wrap: anywhere; }
 
+.augmentation-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr); gap: 1rem; }
+.augmentation-flow-card,
+.augmentation-action-card { padding: 1.25rem; }
+.augmentation-flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.625rem; margin: 0; padding: 0; list-style: none; }
+.augmentation-flow li { min-width: 0; padding: 0.875rem; border: 1px solid var(--border-subtle); border-radius: 8px; background: var(--surface-subtle); }
+.augmentation-flow li > span { display: grid; place-items: center; width: 26px; height: 26px; margin-bottom: 0.625rem; border-radius: 7px; color: var(--info-text); background: var(--surface-selected); font-size: 0.75rem; font-weight: 800; }
+.augmentation-flow strong,
+.augmentation-flow small { display: block; }
+.augmentation-flow strong { font-size: 0.875rem; }
+.augmentation-flow small { margin-top: 0.25rem; color: var(--text-secondary); font-size: 0.75rem; line-height: 1.4; }
+.lineage-contract { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.75rem; padding: 0.75rem; border: 1px solid #BFDBFE; border-radius: 8px; color: var(--info-text); background: var(--surface-selected); font-size: 0.8125rem; }
+.lineage-contract span { font-weight: 700; }
+.lineage-contract code { color: var(--text-primary); font-family: var(--font-mono); overflow-wrap: anywhere; text-align: right; }
+.augmentation-action-card { display: flex; flex-direction: column; }
+.augmentation-action-card h3 { margin: 0.375rem 0; font-size: 1.125rem; }
+.augmentation-action-card > p { margin: 0; color: var(--text-secondary); font-size: 0.875rem; }
+.augmentation-action-card .run-button { width: 100%; margin-top: 1rem; }
+.augmentation-status { margin-top: 0.75rem; padding: 0.75rem; border: 1px dashed var(--border-control); border-radius: 8px; color: var(--text-secondary); background: var(--surface-subtle); }
+.augmentation-status p { margin: 0; font-size: 0.8125rem; }
+.augmentation-result { margin-top: 0.75rem; }
+.augmentation-verdict { display: flex; align-items: center; gap: 0.5rem; }
+.augmentation-verdict > span { padding: 0.25rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 800; }
+.augmentation-verdict > span.is-adopted { color: var(--success-text); background: var(--success-bg); }
+.augmentation-verdict > span.is-quarantined { color: var(--error-text); background: var(--error-bg); }
+.augmentation-counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 0.75rem 0; border: 1px solid var(--border-subtle); border-radius: 8px; overflow: hidden; background: var(--border-subtle); }
+.augmentation-counts div { padding: 0.625rem; background: var(--surface-subtle); text-align: center; }
+.augmentation-counts dt { color: var(--text-secondary); font-size: 0.75rem; }
+.augmentation-counts dd { margin: 0.125rem 0 0; font-family: var(--font-mono); font-weight: 800; }
+.augmentation-gates { display: flex; justify-content: space-between; gap: 1rem; padding: 0.625rem 0; border-bottom: 1px solid var(--border-subtle); font-size: 0.8125rem; }
+.augmentation-gates span { color: var(--text-secondary); }
+.lineage-preview { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.75rem; margin: 0; padding: 0.625rem 0; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); font-size: 0.75rem; }
+.lineage-preview code { color: var(--text-primary); font-family: var(--font-mono); overflow-wrap: anywhere; text-align: right; }
+.augmentation-runtime { display: flex; justify-content: space-between; gap: 0.75rem; margin-top: 0.625rem !important; font-size: 0.6875rem !important; }
+.augmentation-runtime code { color: var(--text-primary); font-family: var(--font-mono); overflow-wrap: anywhere; }
+
+@media (min-width: 1200px) {
+  .augmentation-section:has(#augmentation-result:not([hidden])) .augmentation-heading { display: none; }
+  .augmentation-section:has(#augmentation-result:not([hidden])) .augmentation-flow-card,
+  .augmentation-section:has(#augmentation-result:not([hidden])) .augmentation-action-card { padding: 1rem; }
+  .augmentation-section:has(#augmentation-result:not([hidden])) .augmentation-flow li { padding: 0.625rem; }
+  .augmentation-section:has(#augmentation-result:not([hidden])) .augmentation-flow li > span { margin-bottom: 0.375rem; }
+  .augmentation-section:has(#augmentation-result:not([hidden])) .augmentation-flow small { display: none; }
+  .augmentation-section:has(#augmentation-result:not([hidden])) .lineage-contract { margin-top: 0.5rem; padding: 0.625rem; }
+}
+
 footer { display: flex; justify-content: space-between; gap: 1rem; padding: 1.5rem clamp(1.5rem, 3vw, 2rem); border-top: 1px solid var(--border-subtle); color: var(--text-secondary); background: #fff; font-size: 0.875rem; }
 footer p { margin: 0; text-align: right; }
 
@@ -777,6 +823,7 @@ footer p { margin: 0; text-align: right; }
   .current-step { margin-left: 1.25rem; }
   .welcome-section { grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr); }
   .run-layout { grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr); }
+  .augmentation-layout { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 767px) {
@@ -786,13 +833,16 @@ footer p { margin: 0; text-align: right; }
   .language-button { min-width: 44px; min-height: 40px; padding-inline: 0.5rem; font-size: 0.8125rem; }
   .main-content { padding: 1rem 1rem 3rem; }
   .welcome-section,
-  .run-layout { grid-template-columns: 1fr; gap: 1rem; }
+  .run-layout,
+  .augmentation-layout { grid-template-columns: 1fr; gap: 1rem; }
   .welcome-section { padding-bottom: 2rem; }
   .welcome-copy,
   .next-action-card,
   .selection-card,
   .timeline-card,
-  .run-action-card { padding: 1rem; }
+  .run-action-card,
+  .augmentation-flow-card,
+  .augmentation-action-card { padding: 1rem; }
   h1 { font-size: 1.5rem; }
   .hero-copy { font-size: 1rem; }
   .page-section { padding: 2rem 0; }
@@ -804,6 +854,9 @@ footer p { margin: 0; text-align: right; }
   .gate-spec-grid,
   .gate-grid,
   .evidence-grid { grid-template-columns: 1fr; }
+  .augmentation-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lineage-contract { display: block; }
+  .lineage-contract code { display: block; margin-top: 0.375rem; text-align: left; }
   .scenario-card { grid-template-columns: 44px minmax(0, 1fr); }
   .neutral-badge { grid-column: 2; justify-self: start; }
   .dataset-card { min-height: 194px; }

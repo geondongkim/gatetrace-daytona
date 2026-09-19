@@ -12,7 +12,7 @@ const translations = {
   productDescriptor: { ko: "연구 데이터 검증", en: "Research data validation" },
   workflowLabel: { ko: "검증 워크플로", en: "Verification workflow" },
   workflowTitle: { ko: "현재 단계와 다음 행동", en: "Current stage and next action" },
-  navWelcome: { ko: "시작", en: "Welcome" },
+  navWelcome: { ko: "시작", en: "Start" },
   navWelcomeHint: { ko: "목표와 흐름 확인", en: "Review the goal and flow" },
   navGoal: { ko: "목표와 데이터셋", en: "Goal & dataset" },
   navGoalHint: { ko: "데모 데이터 선택", en: "Choose demo data" },
@@ -22,6 +22,8 @@ const translations = {
   navRunHint: { ko: "실행 흐름과 요청", en: "Run flow and request" },
   navVerdict: { ko: "판정", en: "Verdict" },
   navVerdictHint: { ko: "결과와 근거 확인", en: "Review results and evidence" },
+  navAugmentation: { ko: "증강 실험실", en: "Augmentation lab" },
+  navAugmentationHint: { ko: "후보 생성과 계보", en: "Candidates and lineage" },
   openNavigation: { ko: "워크플로 메뉴 열기", en: "Open workflow navigation" },
   currentStageLabel: { ko: "현재 단계", en: "Current stage" },
   demoDataLabel: { ko: "MVP 데모 · 센서 CSV 예시", en: "MVP demo · sensor CSV example" },
@@ -29,7 +31,7 @@ const translations = {
   fourGateLabel: { ko: "4개 품질 게이트", en: "Four quality gates" },
   nextActionLabel: { ko: "다음 행동", en: "Next action" },
   nextActionTitle: { ko: "검증할 데모 데이터셋을 선택하세요.", en: "Choose the demo dataset to verify." },
-  nextActionDescription: { ko: "정상 또는 오염 샘플을 선택한 뒤 동일한 4개 게이트를 실행합니다.", en: "Choose the clean or contaminated sample, then run the same four gates." },
+  nextActionDescription: { ko: "정상 또는 데이터 오염 샘플을 선택한 뒤 동일한 4개 게이트를 실행합니다.", en: "Choose the clean or contaminated sample, then run the same four gates." },
   nextActionButton: { ko: "데이터셋 선택", en: "Choose dataset" },
   previousStep: { ko: "이전 단계", en: "Previous step" },
   reviewGatesAction: { ko: "게이트 명세 확인", en: "Review gate specification" },
@@ -54,7 +56,7 @@ const translations = {
   datasetLabel: { ko: "데모 데이터셋", en: "Demo dataset" },
   cleanDataset: { ko: "정상 데이터", en: "Clean data" },
   cleanDatasetDescription: { ko: "정렬되고 완전한 센서 관측값", en: "Ordered, complete sensor observations" },
-  contaminatedDataset: { ko: "오염 데이터", en: "Contaminated data" },
+  contaminatedDataset: { ko: "데이터 오염 샘플", en: "Contaminated data" },
   contaminatedDatasetDescription: { ko: "결측, 시간 역전, 미래 라벨 누수", en: "Missing values, time reversal, future-label leakage" },
   expectedPass: { ko: "예상 PASS", en: "Expected PASS" },
   expectedFail: { ko: "예상 FAIL", en: "Expected FAIL" },
@@ -134,7 +136,35 @@ const translations = {
   exitCodeLabel: { ko: "종료 코드", en: "Exit code" },
   durationLabel: { ko: "실행 시간", en: "Duration" },
   notProvided: { ko: "제공되지 않음", en: "Not provided" },
-  footerText: { ko: "연구 데이터 · 격리 실행 · 추적 가능한 판정", en: "Research data · isolated execution · traceable verdict" }
+  footerText: { ko: "연구 데이터 · 격리 실행 · 추적 가능한 판정", en: "Research data · isolated execution · traceable verdict" },
+  augmentationTitle: { ko: "증거가 남는 데이터 증강", en: "Evidence-preserving data augmentation" },
+  augmentationHint: { ko: "데이터가 부족할 때 후보를 만들되, 같은 4개 게이트를 통과한 묶음만 채택합니다.", en: "When data is scarce, generate candidates but adopt only a batch that passes the same four gates." },
+  augmentationProtocol: { ko: "채택 프로토콜", en: "Adoption protocol" },
+  trainingOnly: { ko: "학습 파티션 전용", en: "Training partition only" },
+  augmentationStepSpec: { ko: "Nosana 제한 명세", en: "Nosana constrained spec" },
+  augmentationStepSpecHint: { ko: "허용 변환·수량·시드 제한", en: "Bound transform, count, and seed" },
+  augmentationStepGenerate: { ko: "Daytona 후보 생성", en: "Daytona candidate generation" },
+  augmentationStepGenerateHint: { ko: "호스트 소유 코드로 제한된 jitter 실행", en: "Run bounded jitter with host-owned code" },
+  augmentationStepValidate: { ko: "동일 게이트 재검증", en: "Same-gate re-validation" },
+  augmentationStepValidateHint: { ko: "스키마·결측·시간·누수 검사", en: "Schema, missingness, time, and leakage checks" },
+  augmentationStepAdopt: { ko: "통과 묶음만 채택", en: "Adopt passing batch only" },
+  augmentationStepAdoptHint: { ko: "하나라도 실패하면 전체 격리", en: "Quarantine the batch if any gate fails" },
+  lineageLabel: { ko: "보존되는 계보", en: "Preserved lineage" },
+  evidenceExtensionLabel: { ko: "기능 확장", en: "Feature extension" },
+  augmentationActionTitle: { ko: "선택한 데모 데이터로 후보를 생성합니다.", en: "Generate candidates from the selected demo data." },
+  augmentationActionDescription: { ko: "현재 선택된 정상 또는 데이터 오염 샘플을 사용합니다. 판정은 Daytona 결과만 따릅니다.", en: "Uses the currently selected clean or contaminated sample. Only the Daytona result controls adoption." },
+  runAugmentation: { ko: "증강 후보 생성·검증", en: "Generate and validate candidates" },
+  runningAugmentation: { ko: "증강 실행 중", en: "Running augmentation" },
+  augmentationEmpty: { ko: "아직 증강 실행 기록이 없습니다.", en: "No augmentation run has been recorded yet." },
+  augmentationRunning: { ko: "격리 환경에서 후보를 생성하고 재검증하고 있습니다.", en: "Generating and re-validating candidates in isolation." },
+  augmentationError: { ko: "증강을 완료하지 못했습니다. 결과를 추정하거나 로컬로 우회하지 않습니다.", en: "Augmentation could not be completed. No result is inferred and no local fallback is used." },
+  augmentationAdopted: { ko: "후보 채택", en: "Candidates adopted" },
+  augmentationQuarantined: { ko: "후보 격리", en: "Candidates quarantined" },
+  sourceRowsLabel: { ko: "원본", en: "Source" },
+  candidateRowsLabel: { ko: "후보", en: "Candidates" },
+  adoptedRowsLabel: { ko: "채택", en: "Adopted" },
+  postGateLabel: { ko: "사후 게이트", en: "Post-generation gates" },
+  lineagePreviewLabel: { ko: "계보 예시", en: "Lineage sample" }
 };
 
 const gateDefinitions = [
@@ -149,7 +179,8 @@ const workflowStageKeys = {
   goal: "navGoal",
   gates: "navGates",
   run: "navRun",
-  verdict: "navVerdict"
+  verdict: "navVerdict",
+  augmentation: "navAugmentation"
 };
 
 const workflowHashStages = {
@@ -157,7 +188,8 @@ const workflowHashStages = {
   "#goal-dataset": "goal",
   "#gate-spec": "gates",
   "#isolated-run": "run",
-  "#verdict": "verdict"
+  "#verdict": "verdict",
+  "#augmentation-lab": "augmentation"
 };
 
 const elements = {
@@ -186,12 +218,29 @@ const elements = {
   workflowLinks: document.querySelectorAll("[data-workflow-stage]")
 };
 
+Object.assign(elements, {
+  augmentationButton: document.querySelector("#augmentation-button"),
+  augmentationStatus: document.querySelector("#augmentation-status"),
+  augmentationResult: document.querySelector("#augmentation-result"),
+  augmentationVerdict: document.querySelector("#augmentation-verdict"),
+  augmentationVerdictTitle: document.querySelector("#augmentation-verdict-title"),
+  augmentationSourceRows: document.querySelector("#augmentation-source-rows"),
+  augmentationCandidateRows: document.querySelector("#augmentation-candidate-rows"),
+  augmentationAdoptedRows: document.querySelector("#augmentation-adopted-rows"),
+  augmentationGateStatus: document.querySelector("#augmentation-gate-status"),
+  augmentationLineage: document.querySelector("#augmentation-lineage"),
+  augmentationModel: document.querySelector("#augmentation-model"),
+  augmentationSandbox: document.querySelector("#augmentation-sandbox")
+});
+
 let currentLanguage = readStoredLanguage();
 let currentResult = null;
 let currentErrorKey = null;
 let currentErrorSuffix = "";
 let isRunning = false;
 let currentWorkflowStage = "welcome";
+let currentAugmentation = null;
+let augmentationState = "idle";
 
 function readStoredLanguage() {
   try {
@@ -253,9 +302,11 @@ function translateStaticUi() {
   });
   updateWorkflowStageLabel();
   updateRunButton();
+  updateAugmentationButton();
   updateTimelineLabels();
   if (currentErrorKey) renderErrorMessage();
   if (currentResult) renderResult(currentResult);
+  renderAugmentationState();
 }
 
 function updateWorkflowStageLabel() {
@@ -289,6 +340,55 @@ function updateRunButton() {
   const text = elements.runButton.querySelector("span");
   text.replaceChildren(translationFragment(isRunning ? "runningButton" : "runAudit"));
   elements.runButton.disabled = isRunning;
+}
+
+function updateAugmentationButton() {
+  const running = augmentationState === "running";
+  const text = elements.augmentationButton.querySelector("span");
+  text.replaceChildren(translationFragment(running ? "runningAugmentation" : "runAugmentation"));
+  elements.augmentationButton.disabled = running;
+}
+
+function renderAugmentationState() {
+  elements.augmentationStatus.hidden = augmentationState === "result";
+  elements.augmentationResult.hidden = augmentationState !== "result";
+  if (augmentationState !== "result") {
+    const key = augmentationState === "running" ? "augmentationRunning" : augmentationState === "error" ? "augmentationError" : "augmentationEmpty";
+    const paragraph = elements.augmentationStatus.querySelector("p");
+    paragraph.replaceChildren(translationFragment(key));
+    return;
+  }
+  if (!currentAugmentation) return;
+  const adopted = currentAugmentation.verdict === "ADOPTED";
+  elements.augmentationVerdict.className = adopted ? "is-adopted" : "is-quarantined";
+  elements.augmentationVerdict.textContent = currentAugmentation.verdict;
+  elements.augmentationVerdictTitle.replaceChildren(translationFragment(adopted ? "augmentationAdopted" : "augmentationQuarantined"));
+  elements.augmentationSourceRows.textContent = displayValue(currentAugmentation.source_rows);
+  elements.augmentationCandidateRows.textContent = displayValue(currentAugmentation.candidate_rows);
+  elements.augmentationAdoptedRows.textContent = displayValue(currentAugmentation.adopted_rows);
+  const passed = Array.isArray(currentAugmentation.gates) ? currentAugmentation.gates.filter((gate) => gate.status === "PASS").length : 0;
+  const total = Array.isArray(currentAugmentation.gates) ? currentAugmentation.gates.length : 0;
+  elements.augmentationGateStatus.textContent = `${passed} / ${total} PASS`;
+  const lineage = Array.isArray(currentAugmentation.lineage) ? currentAugmentation.lineage[0] : null;
+  elements.augmentationLineage.textContent = lineage ? `${lineage.source_row_ids.join("+")} → ${lineage.derived_row_id}` : translatedValue("notProvided");
+  elements.augmentationModel.textContent = displayValue(currentAugmentation.nosana_model_id);
+  elements.augmentationSandbox.textContent = displayValue(currentAugmentation.sandbox_id);
+}
+
+function resetAugmentationState() {
+  currentAugmentation = null;
+  augmentationState = "idle";
+  elements.augmentationVerdict.textContent = "";
+  elements.augmentationVerdictTitle.replaceChildren();
+  elements.augmentationSourceRows.textContent = "";
+  elements.augmentationCandidateRows.textContent = "";
+  elements.augmentationAdoptedRows.textContent = "";
+  elements.augmentationGateStatus.textContent = "";
+  elements.augmentationLineage.textContent = "";
+  elements.augmentationModel.textContent = "";
+  elements.augmentationSandbox.textContent = "";
+  updateAugmentationButton();
+  renderAugmentationState();
 }
 
 function setVisibleState(name) {
@@ -552,6 +652,42 @@ async function runAudit() {
   }
 }
 
+async function runAugmentation() {
+  if (augmentationState === "running") return;
+  const selected = elements.form.elements.dataset.value;
+  currentAugmentation = null;
+  augmentationState = "running";
+  updateAugmentationButton();
+  renderAugmentationState();
+
+  try {
+    const response = await fetch("/api/augmentations", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        dataset_id: selected,
+        research_goal: "Expand the training partition while preserving lineage and data quality."
+      })
+    });
+    if (!response.ok) {
+      augmentationState = "error";
+      return;
+    }
+    const payload = await response.json();
+    if (!payload || !["ADOPTED", "QUARANTINED"].includes(payload.verdict) || !Array.isArray(payload.lineage)) {
+      augmentationState = "error";
+      return;
+    }
+    currentAugmentation = payload;
+    augmentationState = "result";
+  } catch (_error) {
+    augmentationState = "error";
+  } finally {
+    updateAugmentationButton();
+    renderAugmentationState();
+  }
+}
+
 document.querySelectorAll(".language-button").forEach((button) => {
   button.addEventListener("click", () => setLanguage(button.dataset.language));
 });
@@ -575,6 +711,7 @@ elements.form.querySelectorAll('input[name="dataset"]').forEach((input) => {
     currentErrorSuffix = "";
     updateTimeline("idle");
     setVisibleState("empty");
+    resetAugmentationState();
   });
 });
 
@@ -603,6 +740,7 @@ elements.form.addEventListener("submit", (event) => {
   runAudit();
 });
 elements.retryButton.addEventListener("click", runAudit);
+elements.augmentationButton.addEventListener("click", runAugmentation);
 
 updateTimeline("idle");
 setWorkflowStage(workflowHashStages[window.location.hash] || "welcome");

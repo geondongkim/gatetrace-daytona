@@ -8,7 +8,7 @@ from typing import Any
 import httpx
 from pydantic import ValidationError
 
-from .models import BilingualSummary, GatePlan
+from .models import AugmentationPlan, BilingualSummary, GatePlan
 
 
 NOSANA_BASE_URL = "https://inference.nosana.com/v1"
@@ -27,6 +27,13 @@ class NosanaSummaryResult:
     generated: bool
 
 
+@dataclass(frozen=True)
+class NosanaAugmentationPlanResult:
+    plan: AugmentationPlan
+    model_id: str | None
+    generated: bool
+
+
 def fallback_plan() -> GatePlan:
     return GatePlan.model_validate(
         {
@@ -41,6 +48,7 @@ def fallback_plan() -> GatePlan:
                         "pressure_bar",
                         "rpm",
                         "failure_within_1h",
+                        "partition",
                     ],
                 },
                 {
@@ -83,6 +91,38 @@ def fallback_summary(verdict: str, gates: list[dict[str, Any]]) -> BilingualSumm
     return BilingualSummary(
         ko="선택된 모든 데이터 게이트를 통과하여 승인되었습니다.",
         en="The dataset was approved after passing every selected gate.",
+    )
+
+
+def fallback_augmentation_summary(
+    verdict: str, gates: list[dict[str, Any]]
+) -> BilingualSummary:
+    failed = [gate["id"] for gate in gates if gate["status"] == "FAIL"]
+    if verdict == "ADOPTED" and not failed:
+        return BilingualSummary(
+            ko="증강 후보가 네 개의 데이터 게이트를 모두 통과하여 채택되었습니다.",
+            en="The augmentation candidates were adopted after passing all four data gates.",
+        )
+    joined = ", ".join(failed) or "unknown"
+    return BilingualSummary(
+        ko=f"증강 후보를 채택하지 않았습니다. 실패 게이트: {joined}.",
+        en=f"The augmentation candidates were not adopted. Failed gates: {joined}.",
+    )
+
+
+def fallback_augmentation_plan() -> AugmentationPlan:
+    return AugmentationPlan(
+        method="bounded_jitter",
+        partition="training",
+        count=6,
+        seed=20260919,
+        feature_columns=[
+            "temperature_c",
+            "vibration_mm_s",
+            "pressure_bar",
+            "rpm",
+        ],
+        max_relative_delta=0.01,
     )
 
 
@@ -184,6 +224,86 @@ class NosanaClient:
                     user=json.dumps({"verdict": verdict, "gates": gates}, ensure_ascii=False),
                     schema=BilingualSummary.model_json_schema(),
                     schema_name="bilingual_summary",
+                )
+                return NosanaSummaryResult(BilingualSummary.model_validate(raw), True)
+        except (
+            httpx.HTTPError,
+            ValueError,
+            KeyError,
+            TypeError,
+            IndexError,
+            ValidationError,
+            json.JSONDecodeError,
+        ):
+            return NosanaSummaryResult(fallback, False)
+
+    def create_augmentation_plan(
+        self, research_goal: str, profile: dict[str, object]
+    ) -> NosanaAugmentationPlanResult:
+        fallback = fallback_augmentation_plan()
+        if not self._api_key:
+            return NosanaAugmentationPlanResult(fallback, None, False)
+
+        try:
+            with self._client_context() as client:
+                model_id = self._discover_model(client)
+                if model_id is None:
+                    return NosanaAugmentationPlanResult(fallback, None, False)
+                raw = self._chat_json(
+                    client,
+                    model_id,
+                    system=(
+                        "Design a constrained data augmentation plan for a training partition. "
+                        "Return only JSON matching the supplied schema. Never return code. "
+                        "Use bounded_jitter only, request no more than 12 candidates, keep the "
+                        "relative delta at or below 0.05, and use only the supported numeric "
+                        "feature columns present in the dataset profile."
+                    ),
+                    user=json.dumps(
+                        {"research_goal": research_goal, "dataset_profile": profile},
+                        ensure_ascii=False,
+                    ),
+                    schema=AugmentationPlan.model_json_schema(),
+                    schema_name="augmentation_spec",
+                )
+                plan = AugmentationPlan.model_validate(raw)
+                available = set(profile.get("columns", []))
+                if not set(plan.feature_columns).issubset(available):
+                    raise ValueError("augmentation plan referenced an unavailable feature")
+                return NosanaAugmentationPlanResult(plan, model_id, True)
+        except (
+            httpx.HTTPError,
+            ValueError,
+            KeyError,
+            TypeError,
+            IndexError,
+            ValidationError,
+            json.JSONDecodeError,
+        ):
+            return NosanaAugmentationPlanResult(fallback, None, False)
+
+    def create_augmentation_summary(
+        self,
+        model_id: str | None,
+        verdict: str,
+        gates: list[dict[str, Any]],
+    ) -> NosanaSummaryResult:
+        fallback = fallback_augmentation_summary(verdict, gates)
+        if not self._api_key or not model_id:
+            return NosanaSummaryResult(fallback, False)
+        try:
+            with self._client_context() as client:
+                raw = self._chat_json(
+                    client,
+                    model_id,
+                    system=(
+                        "Explain the deterministic augmentation adoption result concisely in "
+                        "Korean and English. Return only JSON matching the supplied schema. "
+                        "Do not change the verdict or imply model-performance improvement."
+                    ),
+                    user=json.dumps({"verdict": verdict, "gates": gates}, ensure_ascii=False),
+                    schema=BilingualSummary.model_json_schema(),
+                    schema_name="augmentation_bilingual_summary",
                 )
                 return NosanaSummaryResult(BilingualSummary.model_validate(raw), True)
         except (

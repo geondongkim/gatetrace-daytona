@@ -12,11 +12,14 @@
 - 시각 방향: `/Users/geondongkim/AI-for-Good/DESIGN.md`의 밝고 정돈된 데이터 플랫폼 스타일
 - 공개 저장소: https://github.com/geondongkim/gatetrace-daytona
 - Vercel 프로덕션: https://gatetrace-daytona.vercel.app
+- 증강 확장: 별도 `POST /api/augmentations`, 명시적 `training` 파티션의 제한형 `bounded_jitter`, validation/test 미증강, 원본/파생 계보와 `adopted_candidates` 보존, 기존 네 게이트 전부 통과 시에만 묶음 채택
+- 증강 판정: Daytona 구조화 결과만 사용하며 실패 시 로컬 우회 금지
 
 ## 계획으로만 표시할 사항
 
 - 실제 연구 데이터 통합
-- 증거 보존형 데이터 증강
+- Vercel에서 증강 엔드포인트 E2E 확인
+- 실제 연구 데이터에서 증강 유효성 평가
 - 문서·이미지·비정형 데이터 전용 검증기
 - 사용자 인증
 

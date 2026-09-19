@@ -6,7 +6,14 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 
 from gatetrace.daytona_runner import DaytonaExecutionError
-from gatetrace.models import DaytonaErrorDetail, ErrorMessage, RunRequest, RunResponse
+from gatetrace.models import (
+    AugmentationRequest,
+    AugmentationResponse,
+    DaytonaErrorDetail,
+    ErrorMessage,
+    RunRequest,
+    RunResponse,
+)
 from gatetrace.service import GateTraceService
 
 
@@ -34,6 +41,23 @@ def create_run(
             message=ErrorMessage(
                 ko="격리된 Daytona 샌드박스에서 검증을 완료하지 못했습니다.",
                 en="Validation could not be completed in an isolated Daytona sandbox.",
+            )
+        )
+        raise HTTPException(status_code=502, detail=detail.model_dump(mode="json")) from None
+
+
+@app.post("/api/augmentations", response_model=AugmentationResponse)
+def create_augmentation(
+    request: AugmentationRequest,
+    service: GateTraceService = Depends(get_service),
+) -> AugmentationResponse:
+    try:
+        return service.augment(request)
+    except DaytonaExecutionError:
+        detail = DaytonaErrorDetail(
+            message=ErrorMessage(
+                ko="격리된 Daytona 샌드박스에서 증강과 재검증을 완료하지 못했습니다.",
+                en="Augmentation and re-validation could not be completed in an isolated Daytona sandbox.",
             )
         )
         raise HTTPException(status_code=502, detail=detail.model_dump(mode="json")) from None

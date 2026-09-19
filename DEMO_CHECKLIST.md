@@ -14,6 +14,8 @@
 - [x] 공개 저장소: https://github.com/geondongkim/gatetrace-daytona
 - [x] Vercel 프로덕션 배포 https://gatetrace-daytona.vercel.app 의 루트·헬스·정상 샘플 E2E 확인
 - [x] 배포 URL 320×812에서 가로 오버플로우 없음, 모바일 메뉴 동작 확인
+- [x] 로컬 실제 Nosana·Daytona 증강 E2E: 정상 `ADOPTED` 6/6, 데이터 오염 `QUARANTINED` 0/1 확인
+- [ ] Vercel 배포 URL에서 신규 `/api/augmentations` E2E 확인
 - [ ] 캡처와 로그에 API 키, 토큰, 이메일, 내부 URL, 원본 민감 데이터가 없는지 확인
 
 ## 라이브 데모 순서
@@ -33,7 +35,7 @@
 
 1. `output/playwright/gatetrace-bilingual-clean.png`: 입력부터 정상 결과까지 전체 화면
 2. `output/playwright/gatetrace-result-clean.png`: `APPROVED`와 네 게이트의 구조화 근거
-3. `output/playwright/gatetrace-result-contaminated.png`: `QUARANTINED`와 세 실패 게이트의 구조화 근거
+3. `output/playwright/gatetrace-result-contaminated-en.png`: 영문 UI의 `QUARANTINED`와 세 실패 게이트의 구조화 근거
 
 대체 설명은 다음 순서로 진행합니다.
 
@@ -44,7 +46,7 @@
 
 ## 발표 직전 점검
 
-- [ ] `presentation/GateTrace_3min_Pitch.marp.md`가 정확히 8장인지 확인
+- [ ] 한국어·영어·한영 Marp 원본이 각각 정확히 8장인지 확인
 - [x] 모든 장표에 약 15초의 발표자 노트가 있고 8장 전체가 약 2분인지 확인
 - [ ] `[확인 필요]`를 실제 증거로 교체했거나, 남은 표기를 발표에서 계획으로 명확히 설명
 - [ ] 로컬 상대 경로로 테마와 글꼴이 로드되는지 확인
@@ -54,7 +56,8 @@
 - [ ] 비밀값과 개인 정보가 화면, 셸 기록, 로그, URL에 없는지 재확인
 - [x] 네트워크 실패 시 사용할 정상·오염 결과 캡처를 로컬에 보관
 - [ ] 발표 자료의 공개 저장소·데모 링크를 확인하거나 `[확인 필요]` 상태로 유지
-- [x] `PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -p no:cacheprovider -q` 18개 통과, 외부 서비스 대역 테스트임을 구분
+- [x] `PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -p no:cacheprovider -q` 37개 통과, 외부 서비스 대역 테스트임을 구분
+- [x] `./tests/verify_augmentation_ui.sh`로 1366×768 결과 화면 무스크롤, 데이터 변경 시 stale 판정 제거, 320×812 가로 오버플로우 없음 확인
 
 ## 데모 후 기록
 

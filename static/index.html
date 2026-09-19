@@ -40,6 +40,9 @@
           <a href="#verdict" data-workflow-stage="verdict">
             <span>5</span><span><strong data-i18n="navVerdict"></strong><small data-i18n="navVerdictHint"></small></span>
           </a>
+          <a href="#augmentation-lab" data-workflow-stage="augmentation">
+            <span>6</span><span><strong data-i18n="navAugmentation"></strong><small data-i18n="navAugmentationHint"></small></span>
+          </a>
         </nav>
 
         <div class="rail-note">
@@ -237,6 +240,48 @@
             </div>
             <div class="panel-actions panel-actions--start">
               <a class="secondary-link" href="#goal-dataset" data-i18n="runAnotherAction"></a>
+            </div>
+          </section>
+
+          <section id="augmentation-lab" class="page-section augmentation-section" data-page-stage="augmentation" aria-labelledby="augmentation-title">
+            <div class="section-heading augmentation-heading">
+              <div><span class="step-label">6 · <span data-i18n="navAugmentation"></span></span><h2 id="augmentation-title" data-i18n="augmentationTitle"></h2></div>
+              <p data-i18n="augmentationHint"></p>
+            </div>
+            <div class="augmentation-layout">
+              <article class="augmentation-flow-card">
+                <div class="panel-label"><strong data-i18n="augmentationProtocol"></strong><span data-i18n="trainingOnly"></span></div>
+                <ol class="augmentation-flow">
+                  <li><span>1</span><div><strong data-i18n="augmentationStepSpec"></strong><small data-i18n="augmentationStepSpecHint"></small></div></li>
+                  <li><span>2</span><div><strong data-i18n="augmentationStepGenerate"></strong><small data-i18n="augmentationStepGenerateHint"></small></div></li>
+                  <li><span>3</span><div><strong data-i18n="augmentationStepValidate"></strong><small data-i18n="augmentationStepValidateHint"></small></div></li>
+                  <li><span>4</span><div><strong data-i18n="augmentationStepAdopt"></strong><small data-i18n="augmentationStepAdoptHint"></small></div></li>
+                </ol>
+                <div class="lineage-contract">
+                  <span data-i18n="lineageLabel"></span>
+                  <code>source_row_id → derived_row_id · seed · parameters</code>
+                </div>
+              </article>
+              <aside class="augmentation-action-card">
+                <span class="card-kicker" data-i18n="evidenceExtensionLabel"></span>
+                <h3 data-i18n="augmentationActionTitle"></h3>
+                <p data-i18n="augmentationActionDescription"></p>
+                <button id="augmentation-button" class="run-button" type="button"><span data-i18n="runAugmentation"></span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" /></svg></button>
+                <div id="augmentation-status" class="augmentation-status" aria-live="polite">
+                  <p data-i18n="augmentationEmpty"></p>
+                </div>
+                <div id="augmentation-result" class="augmentation-result" hidden>
+                  <div class="augmentation-verdict"><span id="augmentation-verdict"></span><strong id="augmentation-verdict-title"></strong></div>
+                  <dl class="augmentation-counts">
+                    <div><dt data-i18n="sourceRowsLabel"></dt><dd id="augmentation-source-rows"></dd></div>
+                    <div><dt data-i18n="candidateRowsLabel"></dt><dd id="augmentation-candidate-rows"></dd></div>
+                    <div><dt data-i18n="adoptedRowsLabel"></dt><dd id="augmentation-adopted-rows"></dd></div>
+                  </dl>
+                  <div class="augmentation-gates"><span data-i18n="postGateLabel"></span><strong id="augmentation-gate-status"></strong></div>
+                  <p class="lineage-preview"><span data-i18n="lineagePreviewLabel"></span><code id="augmentation-lineage"></code></p>
+                  <p class="augmentation-runtime"><span>Nosana <code id="augmentation-model"></code></span><span>Daytona <code id="augmentation-sandbox"></code></span></p>
+                </div>
+              </aside>
             </div>
           </section>
         </main>
